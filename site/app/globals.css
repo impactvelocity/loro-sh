@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+/*
+ * The worker admin's Q palette (worker/app/app.css, data-mode="q"):
+ * warm stone ground, slate ink, periwinkle accent. Hex values are Qloo's.
+ * What makes it Loro: Cal Sans for display type and the handwritten wordmark.
+ */
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-cal), var(--font-inter), ui-sans-serif, sans-serif;
+
+  --color-ground: #f8f6f4;
+  --color-raised: #fcfaf8;
+  --color-muted: #f2f0ee;
+  --color-cream: #e8e6e4;
+  --color-hairline: #e0ded9;
+  --color-ink: #28323c;
+  --color-slate: #505a64;
+  --color-stone: #a09b96;
+  /* Stone darkened to pass 4.5:1 on the ground, for small text. */
+  --color-quiet: #736e68;
+  --color-deep: #1e2328;
+  --color-deep-raised: #282e34;
+  --color-accent: #8c8cc8;
+  --color-accent-hover: #8081b7;
+  --color-accent-soft: #e6e6f4;
+  /* Qloo's card hues, used for taste chips. */
+  --color-sage: #8ca082;
+  --color-mauve: #b48ca0;
+  --color-amber: #e6be78;
+  --color-steel: #648c96;
+
+  --animate-marquee: marquee 60s linear infinite;
+  @keyframes marquee {
+    from {
+      translate: 0 0;
+    }
+    to {
+      translate: -50% 0;
+    }
+  }
+}
+
+@layer base {
+  html {
+    @apply bg-ground font-sans text-ink antialiased;
+    font-optical-sizing: auto;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-ground;
+  }
+  ::selection {
+    @apply bg-accent-soft text-ink;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent;
+  }
+  /* Cal Sans GEOM axis: 0 a11y, 50 default, 100 geometric. */
+  .font-display {
+    font-variation-settings: "GEOM" 40;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0s !important;
+    transition-duration: 0s !important;
+  }
+}

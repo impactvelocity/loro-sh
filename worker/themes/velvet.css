@@ -1,0 +1,48 @@
+/*
+ * Velvet: oxblood, cream and blush, for an evening out. Display type is
+ * Gilda Display (font-display), light and high-contrast; Inter, light and
+ * tight, for everything you read. Wine fields broken up by cream ones
+ * (the Date catalogue's `light` scope), cream buttons with dark type on
+ * the wine, wine buttons on the cream, and photographs full bleed.
+ */
+:root[data-theme="velvet"],
+[data-theme="velvet"] {
+  color-scheme: dark;
+  /* Set here too, so a theme scoped inside the admin keeps its own face. */
+  --font-ui: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display-face: "Gilda Display", ui-serif, Georgia, serif;
+  --radius: 0.125rem;
+  --background: oklch(0.345 0.135 28);
+  --foreground: oklch(0.97 0.012 75);
+  --card: oklch(0.3 0.115 27);
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --primary: oklch(0.97 0.012 75);
+  --primary-foreground: oklch(0.3 0.115 27);
+  --secondary: oklch(0.4 0.13 28);
+  --secondary-foreground: var(--foreground);
+  --muted: oklch(0.4 0.13 28);
+  --muted-foreground: oklch(0.97 0.012 75 / 68%);
+  --accent: oklch(0.4 0.13 28);
+  --accent-foreground: var(--foreground);
+  --border: oklch(0.97 0.012 75 / 16%);
+  --input: oklch(0.97 0.012 75 / 32%);
+  --ring: oklch(0.97 0.012 75 / 45%);
+  /* The deep field: the room after the candles. */
+  --deep: oklch(0.22 0.075 25);
+  --deep-foreground: oklch(0.95 0.015 75);
+  /* The wine itself, so a cream section can still reach it. */
+  --wine: oklch(0.345 0.135 28);
+  --wine-foreground: oklch(0.97 0.012 75);
+  /* Blush, for the person they're taking out: light on the wine, deep on the cream. */
+  --blush: oklch(0.84 0.075 22);
+  --blush-light: oklch(0.84 0.075 22);
+  --blush-deep: oklch(0.52 0.165 22);
+  /* Buttons: cream on the wine; the light scope swaps them to wine. */
+  --button: oklch(0.965 0.014 78);
+  --button-foreground: oklch(0.28 0.1 27);
+  /* Cream, the paper the invite is written on. */
+  --cream: oklch(0.965 0.014 78);
+  --cream-foreground: oklch(0.28 0.1 27);
+}

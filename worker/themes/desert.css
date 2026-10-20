@@ -1,0 +1,41 @@
+/*
+ * Desert: sun-bleached sand, dusk plum and terracotta, for festivals.
+ * Editorial type: Instrument Serif for display (font-display), Inter for
+ * everything you read. Flat fields of colour; the sunset gradient is kept
+ * for the big moments (the poster, the sign-up, the guide's header).
+ */
+:root[data-theme="desert"],
+[data-theme="desert"] {
+  color-scheme: light;
+  /* Set here too, so a theme scoped inside the admin keeps its own face. */
+  --font-ui: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display-face: "Instrument Serif", ui-serif, Georgia, serif;
+  --radius: 0.625rem;
+  --background: oklch(0.966 0.017 78);
+  --foreground: oklch(0.23 0.045 330);
+  --card: oklch(0.985 0.009 82);
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --primary: oklch(0.63 0.175 40);
+  --primary-foreground: oklch(0.985 0.009 82);
+  --secondary: oklch(0.928 0.026 72);
+  --secondary-foreground: var(--foreground);
+  --muted: oklch(0.928 0.026 72);
+  --muted-foreground: oklch(0.47 0.035 330);
+  --accent: oklch(0.928 0.026 72);
+  --accent-foreground: var(--foreground);
+  --border: oklch(0.23 0.045 330 / 13%);
+  --input: oklch(0.23 0.045 330 / 18%);
+  --ring: oklch(0.63 0.175 40 / 45%);
+  /* Flat fields: the night band, and the sun. */
+  --plum: oklch(0.235 0.055 322);
+  --plum-foreground: oklch(0.95 0.025 78);
+  --sun: oklch(0.84 0.135 76);
+  /* The sky, top to horizon: dusk plum, magenta, sunset orange, sun gold. */
+  --sky-1: oklch(0.29 0.075 318);
+  --sky-2: oklch(0.5 0.16 352);
+  --sky-3: oklch(0.67 0.175 40);
+  --sky-4: oklch(0.85 0.13 78);
+  --sky-foreground: oklch(0.985 0.015 85);
+}

@@ -1,0 +1,36 @@
+/*
+ * Shore: a beach house's guest book. Cream paper, ink, and the sage of a
+ * painted front door. Source Serif 4, light, for headings and the lines
+ * you linger on (font-display), Inter for forms and small print. Photos
+ * sit inset with room around them; hairlines, no boxes.
+ */
+:root[data-theme="shore"],
+[data-theme="shore"] {
+  color-scheme: light;
+  /* Set here too, so a theme scoped inside the admin keeps its own face. */
+  --font-ui: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display-face: "Source Serif 4 Variable", ui-serif, Georgia, serif;
+  --radius: 0.125rem;
+  --background: oklch(0.966 0.016 100);
+  --foreground: oklch(0.2 0.008 100);
+  --card: oklch(0.985 0.008 100);
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --primary: oklch(0.66 0.035 108);
+  --primary-foreground: oklch(0.99 0.004 100);
+  --secondary: oklch(0.93 0.018 100);
+  --secondary-foreground: var(--foreground);
+  --muted: oklch(0.93 0.018 100);
+  --muted-foreground: oklch(0.46 0.014 100);
+  --accent: oklch(0.93 0.018 100);
+  --accent-foreground: var(--foreground);
+  --border: oklch(0.2 0.008 100 / 13%);
+  --input: oklch(0.2 0.008 100 / 20%);
+  --ring: oklch(0.66 0.035 108 / 50%);
+  /* The deep field: cypress at dusk, for the outcome's cover and the house card. */
+  --deep: oklch(0.29 0.02 135);
+  --deep-foreground: oklch(0.966 0.016 100);
+  /* Wet sand, for the quiet bands between photographs. */
+  --sand: oklch(0.925 0.022 95);
+}

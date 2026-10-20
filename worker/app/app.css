@@ -1,0 +1,324 @@
+@import "tailwindcss" source(".");
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "../themes/index.css";
+@import "@fontsource-variable/inter";
+@import "@fontsource/instrument-serif";
+@import "@fontsource/instrument-serif/400-italic.css";
+@import "@fontsource-variable/cormorant-garamond/wght.css";
+@import "@fontsource-variable/cormorant-garamond/wght-italic.css";
+@import "@fontsource/gilda-display";
+@import "@fontsource-variable/source-serif-4/opsz.css";
+@import "@fontsource-variable/source-serif-4/opsz-italic.css";
+
+@source "../experiences";
+@source "../catalogues";
+@source "../node_modules/streamdown/dist/*.js";
+
+/* Admin is light only. Nothing sets .dark, so the dark: utilities in ui/ never apply. */
+@custom-variant dark (&:is(.dark *));
+
+/* Cal Sans v2: one variable file covers display, text and micro sizes. */
+@font-face {
+  font-family: "Cal Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("../node_modules/cal-sans/fonts/calsans-var-full/CalSansVF.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Cal Sans";
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("../node_modules/cal-sans/fonts/calsans-var-full/CalSansVF.woff2") format("woff2");
+  font-variation-settings: "ital" 1;
+}
+
+@theme inline {
+  /* Indirect so a mode can swap the face; see Q below. */
+  --font-sans: var(--font-ui);
+  --font-heading: var(--font-ui);
+  /* Big editorial type, set per theme (desert: Instrument Serif). Other themes fall back to the UI face. */
+  --font-display: var(--font-display-face, var(--font-ui));
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-disabled-foreground: var(--disabled-foreground);
+  --color-destructive-hover: var(--destructive-hover);
+  --color-destructive-subtle: var(--destructive-subtle);
+  --color-positive: var(--positive);
+  --shadow-popover: 0 4px 16px rgb(0 0 0 / 0.16);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --font-ui: "Cal Sans", ui-sans-serif, system-ui, sans-serif;
+  /* Admin palette, after Uber Base: pure black ink, flat grays, one red. */
+  --background: oklch(1 0 0); /* #ffffff */
+  --foreground: oklch(0 0 0); /* #000000 */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0 0 0);
+  --primary: oklch(0 0 0);
+  --primary-foreground: oklch(1 0 0);
+  --primary-hover: oklch(0.32 0 0); /* #333333 */
+  --secondary: oklch(0.966 0 0); /* #f3f3f3 */
+  --secondary-foreground: oklch(0 0 0);
+  --secondary-hover: oklch(0.934 0 0); /* #e8e8e8 */
+  --muted: oklch(0.966 0 0);
+  --muted-foreground: oklch(0.48 0 0); /* #5e5e5e */
+  --disabled-foreground: oklch(0.74 0 0); /* #a6a6a6 */
+  --accent: oklch(0.966 0 0);
+  --accent-foreground: oklch(0 0 0);
+  --destructive: oklch(0.56 0.21 18); /* #de1135 */
+  --destructive-hover: oklch(0.48 0.19 18);
+  --destructive-subtle: oklch(0.97 0.02 18); /* #fff0ee */
+  --positive: oklch(0.53 0.13 152); /* #0e8345 */
+  --border: oklch(0.934 0 0); /* #e8e8e8 */
+  /* Dividers that sit on gray, like the analytics stat tabs. */
+  --border-strong: oklch(0.88 0 0);
+  --input: oklch(0.934 0 0);
+  --ring: oklch(0 0 0);
+  /* Series run dark to light so the first series always reads as primary. */
+  --chart-1: oklch(0 0 0);
+  --chart-2: oklch(0.55 0 0);
+  --chart-3: oklch(0.78 0 0);
+  --chart-4: oklch(0.88 0 0);
+  --chart-5: oklch(0.94 0 0);
+  /* Controls are 8px rectangles; cards and dialogs scale up from this. */
+  --radius: 0.5rem;
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0 0 0);
+  --sidebar-primary: oklch(0 0 0);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.966 0 0);
+  --sidebar-accent-foreground: oklch(0 0 0);
+  --sidebar-border: oklch(0.934 0 0);
+  --sidebar-ring: oklch(0 0 0);
+}
+
+
+/* Admin dark mode, picked in Settings. Same roles, inverted: white ink on near-black. */
+:root[data-surface="admin"][data-mode="dark"] {
+  color-scheme: dark;
+  --background: oklch(0.16 0 0); /* #141414 */
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.16 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.21 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0 0 0);
+  --primary-hover: oklch(0.86 0 0);
+  --secondary: oklch(0.24 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --secondary-hover: oklch(0.29 0 0);
+  --muted: oklch(0.24 0 0);
+  --muted-foreground: oklch(0.72 0 0);
+  --disabled-foreground: oklch(0.46 0 0);
+  --accent: oklch(0.24 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.64 0.21 22);
+  --destructive-hover: oklch(0.7 0.19 22);
+  --destructive-subtle: oklch(0.27 0.07 18);
+  --positive: oklch(0.72 0.15 152);
+  --border: oklch(0.27 0 0);
+  --border-strong: oklch(0.31 0 0);
+  --input: oklch(0.27 0 0);
+  --ring: oklch(0.985 0 0);
+  --chart-1: oklch(0.985 0 0);
+  --chart-2: oklch(0.7 0 0);
+  --chart-3: oklch(0.5 0 0);
+  --chart-4: oklch(0.36 0 0);
+  --chart-5: oklch(0.28 0 0);
+  --sidebar: oklch(0.16 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.985 0 0);
+  --sidebar-primary-foreground: oklch(0 0 0);
+  --sidebar-accent: oklch(0.24 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.27 0 0);
+  --sidebar-ring: oklch(0.985 0 0);
+}
+
+/*
+ * Admin Q mode, after qloo.com: warm stone ground, slate-navy ink,
+ * periwinkle accent, pill buttons and Inter. Hex values are Qloo's own.
+ */
+:root[data-surface="admin"][data-mode="q"] {
+  color-scheme: light;
+  --font-ui: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --background: oklch(0.975 0.003 67); /* #f8f6f4 surface */
+  --foreground: oklch(0.31 0.022 248); /* #28323c ink */
+  --card: oklch(0.988 0.003 67); /* #fcfaf8 raised */
+  --card-foreground: oklch(0.31 0.022 248);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.31 0.022 248);
+  --primary: oklch(0.65 0.087 283); /* #8c8cc8 accent */
+  --primary-foreground: oklch(1 0 0);
+  --primary-hover: oklch(0.6 0.09 283); /* #8081b7 accent hover */
+  --secondary: oklch(0.925 0.004 67); /* #e8e6e4 cream */
+  --secondary-foreground: oklch(0.31 0.022 248);
+  --secondary-hover: oklch(0.895 0.006 67);
+  --muted: oklch(0.953 0.003 67); /* #f2f0ee surface alt */
+  --muted-foreground: oklch(0.46 0.02 248); /* #505a64 slate */
+  --disabled-foreground: oklch(0.72 0.012 67); /* #a09b96 */
+  --accent: oklch(0.953 0.003 67);
+  --accent-foreground: oklch(0.31 0.022 248);
+  --destructive: oklch(0.56 0.14 33); /* #c8503c error */
+  --destructive-hover: oklch(0.5 0.13 33);
+  --destructive-subtle: oklch(0.96 0.02 33);
+  --positive: oklch(0.55 0.07 140); /* #637559 taste sage */
+  --border: oklch(0.9 0.006 85); /* #e0ded9 hairline */
+  --border-strong: oklch(0.84 0.01 67);
+  --input: oklch(0.9 0.006 85);
+  --ring: oklch(0.65 0.087 283);
+  /* Qloo's card hues: periwinkle, sage, mauve, amber, steel. */
+  --chart-1: oklch(0.65 0.087 283); /* #8c8cc8 */
+  --chart-2: oklch(0.67 0.05 135); /* #8ca082 */
+  --chart-3: oklch(0.67 0.05 345); /* #b48ca0 */
+  --chart-4: oklch(0.82 0.09 80); /* #e6be78 */
+  --chart-5: oklch(0.61 0.04 215); /* #648c96 */
+  --sidebar: oklch(0.975 0.003 67);
+  --sidebar-foreground: oklch(0.31 0.022 248);
+  --sidebar-primary: oklch(0.65 0.087 283);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.925 0.004 67);
+  --sidebar-accent-foreground: oklch(0.31 0.022 248);
+  --sidebar-border: oklch(0.9 0.006 85);
+  --sidebar-ring: oklch(0.65 0.087 283);
+}
+
+/* Qloo's buttons are pills; fields and cards keep their corners. group/button marks every buttonVariants element, links included. */
+:root[data-surface="admin"][data-mode="q"] .group\/button {
+  border-radius: 9999px;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  /* Tailwind v4 leaves buttons on the default cursor; everything clickable gets a pointer. */
+  :is(
+      button,
+      summary,
+      label[for],
+      input[type="file"],
+      [role="button"],
+      [role="tab"],
+      [role="switch"],
+      [role="checkbox"],
+      [role="radio"],
+      [role="option"],
+      [role="menuitem"],
+      [role="menuitemcheckbox"],
+      [role="menuitemradio"],
+      [role="combobox"]
+    ):not(:disabled, [data-disabled], [aria-disabled="true"]) {
+    cursor: pointer;
+  }
+  html {
+    @apply font-sans antialiased;
+    /* Cal Sans picks its Text and Micro cuts from the rendered size. */
+    font-optical-sizing: auto;
+    /* GEOM axis: 0 a11y, 25 UI, 50 default, 100 geometric. */
+    --font-geom: 50;
+  }
+  /* Re-resolved per element so any scope can change --font-geom. */
+  *,
+  ::before,
+  ::after {
+    font-variation-settings: "GEOM" var(--font-geom);
+  }
+  [data-surface="admin"] {
+    color-scheme: light;
+    --font-geom: 25;
+  }
+}
+/* A highlight sweeping across, for what's under way (the outcome's run footer). */
+@theme {
+  --animate-shimmer: shimmer 1.8s ease-in-out infinite;
+  /* A strip of text sliding left forever: the content is repeated twice, so -50% is a seamless loop. */
+  --animate-marquee: marquee 40s linear infinite;
+  /* A slow rise and settle, for a sun while an outcome is being made. */
+  --animate-breathe: breathe 5s ease-in-out infinite alternate;
+  @keyframes breathe {
+    from {
+      translate: 0 4%;
+      scale: 0.97;
+    }
+    to {
+      translate: 0 -3%;
+      scale: 1.03;
+    }
+  }
+  /* A slow push in, for a photo while an outcome is being made. */
+  --animate-drift: drift 16s ease-in-out infinite alternate;
+  @keyframes drift {
+    from {
+      scale: 1.02;
+    }
+    to {
+      scale: 1.12;
+    }
+  }
+  @keyframes marquee {
+    from {
+      translate: 0 0;
+    }
+    to {
+      translate: -50% 0;
+    }
+  }
+  @keyframes shimmer {
+    from {
+      translate: -100% 0;
+    }
+    to {
+      translate: 100% 0;
+    }
+  }
+}

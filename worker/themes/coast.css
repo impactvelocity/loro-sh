@@ -1,0 +1,36 @@
+/*
+ * Coast: bone, ink and harbour green, for homes. Editorial type:
+ * Cormorant Garamond for display (font-display), Inter for everything
+ * you read. Hairlines and photographs do the work; the deep harbour
+ * field is kept for the footer and the agent.
+ */
+:root[data-theme="coast"],
+[data-theme="coast"] {
+  color-scheme: light;
+  /* Set here too, so a theme scoped inside the admin keeps its own face. */
+  --font-ui: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display-face: "Cormorant Garamond Variable", ui-serif, Georgia, serif;
+  --radius: 0.25rem;
+  --background: oklch(0.975 0.007 85);
+  --foreground: oklch(0.22 0.012 230);
+  --card: oklch(0.99 0.004 85);
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --primary: oklch(0.3 0.025 175);
+  --primary-foreground: oklch(0.975 0.007 85);
+  --secondary: oklch(0.94 0.012 80);
+  --secondary-foreground: var(--foreground);
+  --muted: oklch(0.94 0.012 80);
+  --muted-foreground: oklch(0.47 0.015 230);
+  --accent: oklch(0.94 0.012 80);
+  --accent-foreground: var(--foreground);
+  --border: oklch(0.22 0.012 230 / 12%);
+  --input: oklch(0.22 0.012 230 / 18%);
+  --ring: oklch(0.3 0.025 175 / 45%);
+  /* The deep field: harbour water at dusk. */
+  --deep: oklch(0.24 0.022 205);
+  --deep-foreground: oklch(0.95 0.01 85);
+  /* Sand, for the quiet bands between photographs. */
+  --sand: oklch(0.925 0.018 78);
+}

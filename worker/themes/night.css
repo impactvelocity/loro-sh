@@ -1,0 +1,26 @@
+/* Near-black with a cool accent. More geometric letterforms. */
+:root[data-theme="night"],
+[data-theme="night"] {
+  color-scheme: dark;
+  /* Set here too, so a theme scoped inside the admin keeps its own face. */
+  --font-ui: "Cal Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-geom: 100;
+  --radius: 0.5rem;
+  --background: oklch(0.16 0.01 260);
+  --foreground: oklch(0.96 0.005 260);
+  --card: oklch(0.2 0.012 260);
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --primary: oklch(0.78 0.13 210);
+  --primary-foreground: oklch(0.16 0.01 260);
+  --secondary: oklch(0.25 0.012 260);
+  --secondary-foreground: var(--foreground);
+  --muted: oklch(0.25 0.012 260);
+  --muted-foreground: oklch(0.7 0.01 260);
+  --accent: oklch(0.25 0.012 260);
+  --accent-foreground: var(--foreground);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: oklch(0.78 0.13 210 / 50%);
+}

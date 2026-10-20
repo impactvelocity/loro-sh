@@ -1,0 +1,64 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "loro",
+	"main": "./workers/app.ts",
+	"compatibility_date": "2026-10-01",
+	"compatibility_flags": ["nodejs_compat"],
+	"observability": { "enabled": true },
+	"upload_source_maps": true,
+
+	// No IDs on purpose: `wrangler deploy` creates each resource in the
+	// account it deploys to, so a fork needs no setup. Local dev keeps its
+	// own copies in .wrangler/state.
+
+	// Everything Loro stores. Every row carries a workspace_id.
+	"d1_databases": [{ "binding": "DB", "database_name": "loro", "migrations_dir": "migrations" }],
+	// Public page data (start page, intake questions) so /f/:slug skips D1.
+	// Cleared when the owner saves. Never the source of truth.
+	"kv_namespaces": [{ "binding": "CACHE" }],
+	// Uploaded images and their delivery URLs. Remote in dev too: the local
+	// mock's URLs don't load, and uploads should land in the real account.
+	"images": { "binding": "IMAGES", "remote": true },
+	// Uploaded video, sent straight from the browser with a direct upload URL.
+	"stream": { "binding": "STREAM", "remote": true },
+	// Audio only. Stream rejects files with no video track.
+	"r2_buckets": [{ "binding": "AUDIO", "bucket_name": "loro-audio" }],
+	// Funnel events (views, intake, delivered, opened) for the Analytics page.
+	"analytics_engine_datasets": [{ "binding": "EVENTS", "dataset": "loro_events" }],
+	// Models, through AI Gateway (see core/ai.server.ts). Always remote, so
+	// local dev needs `wrangler login` too. No key: Workers AI models bill to
+	// the account, and other providers use AI Gateway's unified billing or the
+	// keys stored on the gateway.
+	"ai": { "binding": "AI", "remote": true },
+	// The outcome workflow: one durable run per generation or test, with
+	// Taste, each generated section and Finish as retried steps.
+	"workflows": [{ "name": "loro-outcome", "binding": "OUTCOME", "class_name": "OutcomeWorkflow" }],
+	// One room per run: holds its live state and streams it to the page.
+	"durable_objects": { "bindings": [{ "name": "OUTCOME_ROOMS", "class_name": "OutcomeRoom" }] },
+	"migrations": [{ "tag": "v1", "new_sqlite_classes": ["OutcomeRoom"] }],
+	"vars": {
+		// Any Workers AI model ("@cf/…") or an AI Gateway catalog model
+		// ("anthropic/…", "openai/…"). Change it here, or per environment.
+		"AI_MODEL": "anthropic/claude-sonnet-5.5",
+		// The AI Gateway that logs, caches and rate limits every call. Created
+		// on first use if your account doesn't have it yet.
+		"AI_GATEWAY": "default",
+		// What writes outcomes: the Taste brief and every generated section.
+		// Needs structured output and speed, since the person waits on every
+		// section: GPT-5.4 mini, with reasoning kept low (core/ai.server.ts).
+		"OUTCOME_MODEL": "openai/gpt-5.4-mini",
+		// Qloo's API. The key is the QLOO_API_KEY secret.
+		"QLOO_API_URL": "https://hackathon.api.qloo.com",
+		// Custom domains (added in the dashboard): the admin, API and MCP on
+		// APP_HOST, the public experience pages on PAGES_HOST. Each sends the
+		// other's pages across. Any other host serves everything, so local dev,
+		// workers.dev and forks work unchanged. Clear both to turn it off.
+		"APP_HOST": "app.loro.sh",
+		"PAGES_HOST": "demo.loro.sh"
+	}
+
+	// Secrets, all optional; see workers/env.d.ts. Set them with
+	// `wrangler secret put`, or in .dev.vars locally. ADMIN_PASSWORD puts
+	// the admin behind a sign-in; it's a secret, not a var, so it stays out
+	// of git.
+}
