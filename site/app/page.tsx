@@ -6,6 +6,7 @@ import { Flexible } from "@/components/home/flexible";
 import { Footer } from "@/components/home/footer";
 import { FrameworkFeatures } from "@/components/home/framework-features";
 import { GitHubIcon } from "@/components/home/icons";
+import { Hackathon } from "@/components/home/hackathon";
 import { Parts } from "@/components/home/parts";
 import { Stack } from "@/components/home/stack";
 import { Workflow } from "@/components/home/workflow";
@@ -89,7 +90,7 @@ export default function Home() {
                 </span>
               </h1>
               <p className="mt-6 max-w-[44ch] text-xl leading-relaxed text-balance sm:text-[1.375rem] text-slate">
-                A brand asks its customers what they love. Loro builds each of them a page about what the brand sells.
+                Turn what customers love into marketing that goes beyond the obvious and the tracking pixel
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <ButtonLink href={links.hackathon} variant="outline">
@@ -115,6 +116,7 @@ export default function Home() {
         <Workflow />
         <Flexible />
         <Stack />
+        <Hackathon />
       </main>
 
       <Footer />

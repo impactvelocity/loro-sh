@@ -265,41 +265,41 @@ function SkillsArt() {
   );
 }
 
-/** Outcome sections in the editor, one mid-drag, beside the phone preview. Hover the card and it drops in. */
+/** Outcome sections in the editor, one being dragged, beside the phone preview. Hover the card and it settles. */
 function DragArt() {
-  const row = "flex h-8.5 items-center gap-2 rounded-xl border border-hairline bg-white px-2.5 text-[11px] text-ink";
+  const row =
+    "flex items-center gap-2 rounded-xl border border-hairline bg-white px-3 py-2.5 text-[11px] text-ink shadow-[0_8px_16px_-12px_rgb(40_50_60/0.25)]";
   return (
-    <div className="flex w-full max-w-[300px] items-center gap-4">
-      <div className="relative flex-1 space-y-1.5">
+    <div className="flex w-full max-w-[290px] items-center gap-4 transition-[translate] duration-300 group-hover:-translate-y-1">
+      <div className="flex-1 space-y-2">
         <div className={row}>
           <Grip />
           Cover
         </div>
-        <div className="h-8.5 rounded-xl border border-dashed border-accent/60 bg-accent-soft/50" />
-        <div className={row}>
-          <Grip />
-          Your Days
-        </div>
         <div
           className={cx(
             row,
-            "absolute inset-x-0 top-10 translate-x-2 -translate-y-1 -rotate-3 shadow-[0_12px_24px_-10px_rgb(40_50_60/0.35)] transition-[rotate,translate] duration-300 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:rotate-0",
+            "translate-x-2 transition-[translate] duration-300 group-hover:translate-x-0",
           )}
         >
           <Grip />
           Your Locals
         </div>
+        <div className={row}>
+          <Grip />
+          Your Days
+        </div>
       </div>
-      <div className="w-[76px] shrink-0 rounded-[16px] border-2 border-[#d8d4cf] bg-white p-1.5 shadow-[0_12px_24px_-14px_rgb(40_50_60/0.3)]">
-        <span className="block h-9 rounded-md bg-[linear-gradient(160deg,#a9bfa0,#6f8b67)]" />
-        <div className="mt-1.5 rounded-md p-1 ring-1 ring-accent">
+      <div className="w-[72px] shrink-0 rounded-[14px] border border-hairline bg-white p-1.5 shadow-[0_16px_32px_-16px_rgb(40_50_60/0.25)]">
+        <span className="block h-8 rounded-md bg-[linear-gradient(160deg,#a9bfa0,#6f8b67)]" />
+        <div className="mt-1.5 space-y-1 px-0.5">
           <Bar className="w-4/5" />
-          <div className="mt-1 grid grid-cols-2 gap-0.5">
+          <div className="grid grid-cols-2 gap-0.5">
             <span className="h-4 rounded-sm bg-muted" />
             <span className="h-4 rounded-sm bg-muted" />
           </div>
         </div>
-        <div className="mt-1 space-y-1 p-1">
+        <div className="mt-1.5 space-y-1 px-0.5 pb-0.5">
           <Bar className="w-full" />
           <Bar className="w-2/3" />
         </div>

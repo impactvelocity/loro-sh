@@ -1,0 +1,3 @@
+# Files in out/ that wrangler deploy skips.
+.DS_Store
+**/.DS_Store

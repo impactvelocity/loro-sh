@@ -37,7 +37,6 @@ export function Stack() {
       id="stack"
       title="Built on Qloo and Cloudflare"
       align="center"
-      className="pb-24 sm:pb-32"
       intro={<p>Taste from Qloo, and everything else on the brand&rsquo;s own Cloudflare account.</p>}
     >
       <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3">

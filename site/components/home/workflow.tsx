@@ -5,29 +5,25 @@ import { Section } from "@/components/home/section";
 import { cx } from "@/components/ui";
 
 /** Theo's road trip run (gen-9f3e43e4-19f, the one in Examples), told by what each stage gives the person. */
-const run: { title: string; kind: string; message: string; icon: ReactNode; taste?: boolean; outcome?: boolean }[] = [
+const run: { title: string; message: string; icon: ReactNode; taste?: boolean; outcome?: boolean }[] = [
   {
-    title: "Taste Matched",
-    kind: "Qloo",
+    title: "Qloo Taste Matched",
     message: "Seven favourites become twenty picks they’re likely to love",
     icon: <QDisc />,
     taste: true,
   },
   {
     title: "Route and Lineup",
-    kind: "Code steps",
     message: "The drive split into three days, and the festival’s bill ranked for them",
     icon: <PinIcon />,
   },
   {
     title: "Written in the Festival’s Voice",
-    kind: "Model",
     message: "Nine stops on the way, each with a reason it suits them",
     icon: <SparkIcon />,
   },
   {
     title: "Their Experience",
-    kind: "Branded outcome",
     message: "A road trip in the festival’s own look, ready to share with friends",
     icon: <ZapIcon />,
     outcome: true,
@@ -56,7 +52,7 @@ export function Workflow() {
   return (
     <Section
       id="workflow"
-      title="How Taste Runs Through Every Page"
+      title="How Taste Runs Through Every Experience"
       align="center"
       intro={
         <p>
@@ -96,7 +92,6 @@ export function Workflow() {
                 </span>
               )}
               <h3 className="mt-3 text-[15px] font-medium text-ink">{step.title}</h3>
-              <p className="text-[12px] text-quiet">{step.kind}</p>
               <p
                 className={cx(
                   "mt-3 w-full max-w-[16rem] rounded-xl border bg-white px-3 py-2 text-[13px] leading-snug text-slate",

@@ -45,6 +45,8 @@ export type Demo = {
   swatch: string;
   /** Text on the swatch, when white doesn't read on it. */
   swatchInk?: string;
+  /** The outcome card's colours, when a gradient of the swatch doesn't look like the page. */
+  outcomeLook?: { bar: string; barInk: string; hero: string; heroInk: string; pop?: boolean };
   outcome: { src: string; url: string; alt: string };
   /** The public start page, or null when another system starts every run. */
   tryUrl: string | null;
@@ -58,7 +60,8 @@ export type Demo = {
 
 const ws = "https://demo.loro.sh/f/demo-experiences";
 const run = (slug: string, id: string) => `${ws}/${slug}/g/${id}`;
-const bare = (url: string) => url.replace("https://", "");
+// What the browser frame shows: the host and the experience, without the workspace and run id.
+const bare = (url: string) => url.replace(/^https:\/\/([^/]+)\/f\/[^/]+\/([^/]+).*$/, "$1/$2");
 
 const roadtrip = run("mirage-valley-road-trip", "gen-9f3e43e4-19f");
 const stay = run("your-stay", "gen-b49ae69d-ac2");
@@ -124,6 +127,13 @@ export const demos: Demo[] = [
       },
     ],
     swatch: "#e0603a",
+    // Desert: the plum bar and the dusk sky, plum into magenta.
+    outcomeLook: {
+      bar: "#3a1c40",
+      barInk: "#f6ecdf",
+      hero: "linear-gradient(175deg, #3f1f4b 0%, #6d2a64 55%, #a23f72 100%)",
+      heroInk: "#fdf6ec",
+    },
     outcome: { src: "/demos/roadtrip-outcome.jpg", url: bare(roadtrip), alt: "Theo’s road trip page from Mirage Valley" },
     tryUrl: `${ws}/mirage-valley-road-trip`,
     prefillUrl: `${ws}/mirage-valley-road-trip?profile=theo&skip=1`,
@@ -515,6 +525,8 @@ export const demos: Demo[] = [
       },
     ],
     swatch: "#d10f3f",
+    // Pop: the pink hero field, black ink and black rules on cream.
+    outcomeLook: { bar: "#fcf7ee", barInk: "#151215", hero: "#fba7d0", heroInk: "#151215", pop: true },
     outcome: { src: "/demos/date-outcome.jpg", url: bare(date), alt: "Priyanka’s first date plan from Overlap" },
     tryUrl: `${ws}/first-date`,
     prefillUrl: `${ws}/first-date?profile=priyanka&skip=1`,

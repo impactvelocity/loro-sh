@@ -124,11 +124,11 @@ function Funnel({ demo }: { demo: Demo }) {
   return (
     <div className="mt-10">
       <ol className="-mx-5 flex snap-x snap-mandatory scroll-px-5 gap-3 overflow-x-auto px-5 pb-2 sm:-mx-8 sm:scroll-px-8 sm:px-8 lg:mx-0 lg:grid lg:grid-cols-2 lg:gap-4 lg:overflow-visible lg:px-0 lg:pb-0 xl:grid-cols-4">
-        {demo.steps.map((step, i) => (
+        {demo.steps.map((step) => (
           <li
             key={step.title}
             className={cx(
-              "group relative flex w-[78%] shrink-0 snap-start flex-col rounded-2xl border bg-raised p-2.5 sm:w-[44%] lg:w-auto",
+              "group relative flex w-[78%] shrink-0 snap-start flex-col rounded-2xl border bg-raised p-2.5 transition-transform duration-300 hover:scale-[1.03] sm:w-[44%] lg:w-auto",
               step.kind === "outcome"
                 ? "border-2 border-transparent shadow-[0_18px_36px_-22px_rgb(232_103_158/0.6)] [background:linear-gradient(#fcfaf8,#fcfaf8)_padding-box,linear-gradient(135deg,#7d7dd0,#e8679e_50%,#eea53f)_border-box]"
                 : "border-hairline",
@@ -141,14 +141,6 @@ function Funnel({ demo }: { demo: Demo }) {
               <p className="text-[15px] font-medium text-ink">{step.title}</p>
               <p className="mt-1 text-[13px] leading-snug text-slate">{step.detail}</p>
             </div>
-            {i < demo.steps.length - 1 ? (
-              <span
-                aria-hidden
-                className="absolute top-[5.25rem] -right-[0.95rem] z-10 hidden size-7 items-center justify-center rounded-full border border-hairline bg-raised text-quiet shadow-[0_4px_10px_-4px_rgb(40_50_60/0.25)] xl:flex"
-              >
-                <ArrowRight className="size-3.5" />
-              </span>
-            ) : null}
           </li>
         ))}
       </ol>
@@ -166,7 +158,7 @@ export function StepArt({ step, demo }: { step: FunnelStep; demo: Demo }) {
           src={step.src}
           alt=""
           loading="lazy"
-          className="absolute inset-0 size-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
+          className="absolute inset-0 size-full object-cover object-top"
         />
       );
     case "intake":
@@ -206,21 +198,47 @@ export function StepArt({ step, demo }: { step: FunnelStep; demo: Demo }) {
           </ol>
         </Sheet>
       );
-    case "outcome":
+    case "outcome": {
+      const look = demo.outcomeLook ?? {
+        bar: demo.swatch,
+        barInk: demo.swatchInk ?? "rgb(255 255 255 / 0.9)",
+        hero: `linear-gradient(160deg, ${demo.swatch}, color-mix(in oklab, ${demo.swatch} 55%, black))`,
+        heroInk: "#fff",
+      };
+      // Pop draws square corners and black rules, like the date page.
+      const pop = look.pop;
       return (
-        <div className="absolute inset-3 flex flex-col overflow-hidden rounded-lg border border-hairline bg-white shadow-[0_10px_24px_-14px_rgb(40_50_60/0.35)]">
-          <div className="flex h-5 shrink-0 items-center px-2" style={{ background: demo.swatch }}>
-            <span className="text-[8.5px] font-medium text-white/90" style={{ color: demo.swatchInk }}>
+        <div
+          className={cx(
+            "absolute inset-3 flex flex-col overflow-hidden bg-white shadow-[0_10px_24px_-14px_rgb(40_50_60/0.35)]",
+            pop ? "border-[1.5px] border-[#151215]" : "rounded-lg border border-hairline",
+          )}
+        >
+          <div
+            className={cx("flex h-5 shrink-0 items-center px-2", pop && "border-b-[1.5px] border-[#151215]")}
+            style={{ background: look.bar }}
+          >
+            <span
+              className={cx("text-[8.5px] font-medium", pop && "font-display tracking-wide uppercase")}
+              style={{ color: look.barInk }}
+            >
               {demo.brand}
             </span>
           </div>
-          <div
-            className="flex flex-1 items-end px-2.5 pb-2.5"
-            style={{ background: `linear-gradient(160deg, ${demo.swatch}, color-mix(in oklab, ${demo.swatch} 55%, black))` }}
-          >
-            <p className="font-display text-[17px] leading-[1.1] text-white">{step.headline}</p>
+          <div className="flex flex-1 items-end px-2.5 pb-2.5" style={{ background: look.hero }}>
+            <p
+              className={cx("font-display text-[17px] leading-[1.1]", pop && "text-[19px] leading-none font-semibold tracking-tight uppercase")}
+              style={{ color: look.heroInk }}
+            >
+              {step.headline}
+            </p>
           </div>
-          <div className="grid shrink-0 grid-cols-3 divide-x divide-hairline">
+          <div
+            className={cx(
+              "grid shrink-0 grid-cols-3 divide-x",
+              pop ? "divide-[#151215] border-t-[1.5px] border-[#151215] bg-[#fcf7ee]" : "divide-hairline",
+            )}
+          >
             {step.stats.map((stat) => (
               <span key={stat} className="truncate px-1 py-2 text-center text-[10px] font-medium text-ink">
                 {stat}
@@ -229,6 +247,7 @@ export function StepArt({ step, demo }: { step: FunnelStep; demo: Demo }) {
           </div>
         </div>
       );
+    }
     case "trigger":
       return (
         <div className="absolute inset-3 flex flex-col overflow-hidden rounded-lg bg-deep p-2.5 font-mono text-[9.5px] leading-[1.55] text-white/70 shadow-[0_10px_24px_-14px_rgb(20_24_28/0.6)]">
@@ -276,7 +295,7 @@ function Sheet({ children, className }: { children: ReactNode; className?: strin
   return (
     <div
       className={cx(
-        "relative w-full overflow-hidden rounded-lg border border-hairline bg-white p-2.5 shadow-[0_10px_24px_-14px_rgb(40_50_60/0.35)] transition-[translate] duration-300 group-hover:-translate-y-0.5",
+        "relative w-full overflow-hidden rounded-lg border border-hairline bg-white p-2.5 shadow-[0_10px_24px_-14px_rgb(40_50_60/0.35)]",
         className,
       )}
     >
