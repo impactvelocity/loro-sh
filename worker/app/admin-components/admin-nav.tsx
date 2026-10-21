@@ -68,7 +68,7 @@ export function AdminNav({ onNavigate }: { onNavigate?: () => void }) {
         <NavList items={agents} onNavigate={onNavigate} />
       </div>
       <div className="flex flex-col gap-6">
-        {readOnly && <ViewOnlyNote>Everything here is open to read. Saving, deleting and the agent need the password.</ViewOnlyNote>}
+        {readOnly && <ViewOnlyNote>This is demo data, view only for judging. In production use the admin would be password protected.</ViewOnlyNote>}
         <NavList items={secondary} onNavigate={onNavigate} />
         <a
           href="https://loro.sh"

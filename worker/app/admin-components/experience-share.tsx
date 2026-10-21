@@ -1,8 +1,7 @@
 /**
  * The Share tab: everywhere an experience can start. The public link (and
- * where it lives) with its QR code, the API for starting it from another
- * system, and the headless SDK for building it into your own design. Snippets use the
- * saved experience's real link and question ids.
+ * where it lives) with its QR code, and the API for starting it from another
+ * system. Snippets use the saved experience's real link and question ids.
  */
 import { useState } from "react";
 import { CheckIcon, CopyIcon, DownloadIcon, ExternalLinkIcon } from "lucide-react";
@@ -101,22 +100,6 @@ export function ExperienceShare({
   -H "Content-Type: application/json" \\
   -d '${body}'`;
 
-  const sdk = `import { createExperienceClient } from "@core/catalogue/client";
-import { useExperience } from "@core/catalogue/use-experience";
-
-const client = createExperienceClient({
-  baseUrl: "${origin}",
-  workspace: "${workspace}",
-  experience: "${slug}",
-});
-
-// In your component: the state and rules, none of the markup.
-const flow = useExperience({ catalogue, config, client });
-flow.optin({ name, email });            // sign up
-flow.setAnswer("${questions[0]?.id ?? "question-id"}", value);  // answer the current step
-flow.next();                            // check it, move on, submit at the end
-client.feedback({ rating: 5 });          // rate the outcome`;
-
   return (
     <div className="flex max-w-4xl flex-col gap-10">
       <FormSection title="Public Link">
@@ -203,17 +186,6 @@ client.feedback({ rating: 5 });          // rate the outcome`;
           <code className="font-mono">GET {api}/questions</code> lists the answers it takes. The response links
           to the outcome page and its run, which you can poll or stream.
         </p>
-      </FormSection>
-
-      <FormSection title="Your Own Design">
-        <p className="text-sm text-muted-foreground">
-          The form is headless: use the same flow and rules with your own components.{" "}
-          <a href={`${url}/plain`} target="_blank" rel="noreferrer" className="font-medium text-foreground underline underline-offset-4">
-            See it in a bare design
-          </a>
-          .
-        </p>
-        <Code code={sdk} />
       </FormSection>
     </div>
   );
