@@ -120,6 +120,7 @@ const suggestions = [
   "How are my experiences doing this month?",
   "Who finished intake most recently?",
   "Suggest a new segment from my people",
+  "Ask Qloo what my biggest segment would like",
 ];
 
 /* Threads */

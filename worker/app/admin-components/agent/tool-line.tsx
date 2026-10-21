@@ -3,7 +3,9 @@ import {
   BarChart3Icon,
   BookOpenIcon,
   CircleCheckIcon,
+  CompassIcon,
   LoaderCircleIcon,
+  SearchIcon,
   SparklesIcon,
   UserIcon,
   UsersIcon,
@@ -12,6 +14,7 @@ import {
 import { type DynamicToolUIPart, type ToolUIPart, getToolName } from "ai";
 
 import type { AgentTools } from "@core/agent";
+import { type PlaceCategory, placeCategories } from "@core/outcome/lookups";
 import { ageRanges, signalTypes } from "@core/profiles";
 import { Badge } from "@/admin-components/ui/badge";
 import { Button } from "@/admin-components/ui/button";
@@ -34,6 +37,14 @@ const count = (value: unknown, one: string, many: string) => {
   const n = Array.isArray(value) ? value.length : 0;
   return `${n} ${n === 1 ? one : many}`;
 };
+
+/** "bars", "films", "TV shows": what a Qloo call is finding. */
+function finding(input: Loose) {
+  const kinds = (input.kinds as PlaceCategory[] | undefined) ?? [];
+  if (input.type === "place" && kinds.length) return kinds.map((kind) => placeCategories[kind].label.toLowerCase()).join(", ");
+  const label = signalTypes[input.type as keyof typeof signalTypes] ?? "thing";
+  return label.startsWith("TV") ? `${label}s` : `${label.toLowerCase()}s`;
+}
 
 /** What each call says while it runs and once it's done. */
 function describe(name: string, input: Loose, output: Loose | undefined) {
@@ -61,6 +72,28 @@ function describe(name: string, input: Loose, output: Loose | undefined) {
     }
     case "listSkills":
       return { icon: BookOpenIcon, running: "Reading skills", done: `Read ${count(output, "skill", "skills")}` };
+    case "searchQloo": {
+      const names = (input.names as { name: string }[] | undefined) ?? [];
+      const asked = names.length === 1 ? names[0].name : `${names.length} names`;
+      const found = Number(output?.found ?? 0);
+      return {
+        icon: SearchIcon,
+        running: `Looking up ${asked} in Qloo`,
+        done:
+          names.length === 1
+            ? found ? `Found ${asked} in Qloo` : `Qloo doesn't know ${asked}`
+            : `Found ${found} of ${names.length} names in Qloo`,
+      };
+    }
+    case "recommendWithQloo": {
+      const where = input.nearPlace ? ` near ${input.nearPlace}` : input.city ? ` in ${input.city}` : "";
+      const who = typeof output?.for === "string" ? ` for ${output.for}` : "";
+      return {
+        icon: CompassIcon,
+        running: `Asking Qloo for ${finding(input)}${where}`,
+        done: `Qloo ranked ${count(output?.results, "result", finding(input))}${where}${who}`,
+      };
+    }
     case "createSegment":
       return { icon: UsersIcon, running: `Creating segment ${input.name}`, done: `Created segment ${input.name}` };
     case "addSkill":

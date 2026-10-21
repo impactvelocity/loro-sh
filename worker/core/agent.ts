@@ -1,7 +1,8 @@
 /**
  * The workspace agent: a chat that reads and edits the workspace's
- * profiles, segments, experiences, analytics and skills through tools
- * (agent-tools.server.ts), on the model set in core/ai.server.ts.
+ * profiles, segments, experiences, analytics and skills, and asks Qloo,
+ * through tools (agent-tools.server.ts), on the model set in
+ * core/ai.server.ts.
  *
  * Threads and their messages are saved in D1 (agent.server.ts). Messages
  * are AI SDK UI messages, so the admin renders them with useChat.

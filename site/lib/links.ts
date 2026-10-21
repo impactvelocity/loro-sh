@@ -17,7 +17,7 @@ export const links = {
   qloo: "https://www.qloo.com",
   hackathon: "https://qloo.devpost.com/",
   // The demo video on YouTube. Until it's set, the video frame is hidden.
-  video: "https://youtu.be/BNrcbOSGIu4",
+  video: "https://youtu.be/MXuHlf53Rq4",
   creator: {
     site: "https://hidylanjones.com",
     twitter: "https://twitter.com/hidylanjones",

@@ -52,7 +52,7 @@ const sections: DocSection[] = [
               "**Experiences**: a start page, intake questions and an outcome, built from a catalogue around one thing like a festival or a listing.",
               "**Profiles**: segments you describe once, and the people who arrive through an experience.",
               "**Context**: skills the workflow follows, and the images, video and audio you place on pages.",
-              "**Agent**: a chat that reads all of the above, and creates segments and skills once you approve them.",
+              "**Agent**: a chat that reads all of the above, asks Qloo, and creates segments and skills once you approve them.",
               "**API and MCP**: a REST API and an MCP server, so your own systems and agents can run a workspace.",
             ],
           },
@@ -478,6 +478,11 @@ const sections: DocSection[] = [
           {
             type: "p",
             text: "Use **+** in the message field to attach a segment, person or experience, or press **Ask Agent** on its page. The agent reads what you attached before it answers.",
+          },
+          { type: "h2", text: "Ask Qloo" },
+          {
+            type: "p",
+            text: "The agent can ask Qloo too. It checks names before it suggests them as signals, and ranks things for a segment, a person or a few favourites the way their outcomes would: bars near the venue for one segment, films for one person. Each result says which of their signals pulled it up.",
           },
           { type: "h2", text: "Changes Need Your Approval" },
           {

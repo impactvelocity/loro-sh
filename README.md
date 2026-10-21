@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="site/public/devpost/00-cover.png" alt="Loro is a Framework for Brand Experiences" width="100%">
+  <img src="site/public/devpost/00-cover.png" alt="Loro is an Agentic Framework for Brand Experiences" width="100%">
 </p>
 
 <h1 align="center">Loro</h1>
 
 <p align="center">
-  <strong>Open source.</strong> A framework for brand experiences, built on <a href="https://www.qloo.com">Qloo</a> taste data, that runs as one Cloudflare Worker on the brand's own account.
+  <strong>Open source.</strong> An agentic framework for brand experiences. Loro is an agent in the brand's funnel that builds each customer a page from their taste in <a href="https://www.qloo.com">Qloo</a>, and it runs as one Cloudflare Worker on the brand's own account.
 </p>
 
 <p align="center">
@@ -17,8 +17,8 @@
 
 <p align="center">
   <a href="https://loro.sh">Site</a> ·
-  <a href="https://demo.loro.sh/f/demo-experiences/mirage-valley-road-trip">Live Demo</a> ·
-  <a href="https://app.loro.sh">Admin (read only)</a> ·
+  <a href="https://demo.loro.sh/f/demo-experiences/mirage-valley-road-trip?profile=theo&skip=1">Run the Agent Live</a> ·
+  <a href="https://app.loro.sh/admin?demo=1">Admin (read only)</a> ·
   <a href="#deploy">Deploy</a>
 </p>
 
@@ -28,11 +28,13 @@
 
 ---
 
-A brand asks its customers what they love, and Loro builds each of them a page about what the brand sells: a road trip to its festival, a weekend at its cottage, a week in the house it's selling.
+Loro puts an agent in the middle of a brand's funnel, between the sign-up and the sale. A brand asks its customers what they love, and Loro's agent builds each of them a page about what the brand sells: a road trip to its festival, a weekend at its cottage, a week in the house it's selling.
 
-Each page needs three things: what the brand sells, who the person is, and what that person loves. Brands already have the first two. Qloo has the third. Loro puts them together, and every place, act and show on the page comes from Qloo or a brand's own data. Anything the model invents is dropped before the page shows it.
+Each page needs three things: what the brand sells, who the person is, and what that person loves. Brands already have the first two. Qloo has the third. What's missing is the work of putting them together for each person. No festival can pay someone to plan every ticket holder's drive. Loro's agent planned Theo's in 41 seconds.
 
-Loro was built for the [Qloo hackathon](https://qloo.devpost.com/).
+Every place, act and show on the page comes from Qloo or the brand's own data. Anything the agent invents is dropped before the page shows it.
+
+Loro was built from scratch for the [Qloo hackathon](https://qloo.devpost.com/), starting October 15, 2026. All of the code is new. This repo was created on October 20, so its history starts there rather than on day one.
 
 ![Every Experience Starts with the Right Context](site/public/devpost/02-the-right-context.png)
 
@@ -54,12 +56,12 @@ Loro was built for the [Qloo hackathon](https://qloo.devpost.com/).
 
 A festival sells a ticket, then goes quiet until the gates open. Every ticket holder gets the same email: the dates, the lineup from A to Z, parking and what to pack. Theo, a made-up ticket holder in the demo, still has 1,091 miles to drive from Portland. Nothing in that email knows it.
 
-Theo signs up on the page for Mirage Valley, a made-up festival in Indio, California, and answers eight questions, from where the drive starts to what's playing in the car. Then, in one run:
+Theo signs up on the page for Mirage Valley, a made-up festival in Indio, California, and answers eight questions, from where the drive starts to what's playing in the car. Then Loro's agent takes over. In one run, it:
 
-- Qloo turns Theo's seven favourites into twenty picks.
-- A route step splits the 1,091 miles into three days, each ending in a town worth a night.
-- A lineup step scores the festival's bill against Theo's taste in one Qloo call and marks four must-sees.
-- The model writes nine stops in the festival's voice, each with a reason it's there.
+- sends Theo's seven favourites to Qloo and gets twenty picks back.
+- runs the route tool, which splits the 1,091 miles into three days, each ending in a town worth a night.
+- runs the lineup tool, which scores the festival's bill against Theo's taste in one Qloo call and marks four must-sees.
+- writes nine stops in the festival's voice, each with a reason it's there.
 
 Neil Young, Fleetwood Mac and Bon Iver lead to Seven Suns Coffee & Cafe in Mount Shasta. The page streams in section by section, in Mirage Valley's own look.
 
@@ -67,13 +69,13 @@ Neil Young, Fleetwood Mac and Bon Iver lead to Seven Suns Coffee & Cafe in Mount
 
 ### Two Ways In
 
-An experience starts one of two ways. Someone signs up on the brand's page and answers its questions. Or the brand's own system calls `POST /trigger` after a booking, a match or a ticket sale, sends the answers it already has, and gets the page's link back.
+An experience starts one of two ways. Someone signs up on the brand's page and answers its questions. Or the brand's own system calls `POST /trigger` after a booking, a match or a ticket sale, sends the answers it already has, and gets the page's link back. Either way, Loro's agent takes it from there.
 
 ![The Loro Experience Funnel](site/public/devpost/04-the-experience-funnel.png)
 
-### Six Brands, One Core
+### Six Brands, One Agent
 
-The demo has six made-up brands in six industries. The same core runs all of them. Only the catalogue, the code steps and the theme change.
+The demo has six made-up brands in six industries. The same agent runs all of them. Only the catalogue, the tools it's given and the theme change.
 
 | Brand | Industry | When it runs | What the person gets |
 | --- | --- | --- | --- |
@@ -84,18 +86,18 @@ The demo has six made-up brands in six industries. The same core runs all of the
 | **The Wren** | Live venue | Between shows | Four nights from the next 24 shows, with dinner a short walk from the doors |
 | **Overlap** | Dating app | When two people match | A first date, four stops a walk apart |
 
-![One Framework, Any Experience](site/public/devpost/05-one-framework-any-experience.png)
+![One Agent, Any Funnel](site/public/devpost/05-one-framework-any-experience.png)
 
 ### The Loro App
 
 Each brand gets a workspace in the admin.
 
+- **Agent**: Loro's agent, in a chat for the brand's team. Ask about any profile, segment or experience. It asks before it changes anything.
 - **Analytics**: views, sign-ups and finished pages per experience, counted without names or emails.
 - **Profiles**: everyone who signed up, with their answers, taste and pages, grouped into segments.
 - **Experiences**: an editor for the start page, questions and outcome with a phone preview beside it, and Tests that run the unsaved draft as a real profile.
-- **Context**: the brand's skills (its voice and its rules, in plain English) and its photo and video library.
-- **Agent**: ask about any profile, segment or experience. It asks before it changes anything.
-- **Connect**: the REST API, an MCP server with 31 tools, and the keys for both.
+- **Context**: the rules the agent follows on every page (the brand's voice, what it can promise, the words it never uses), plus its photo and video library.
+- **Connect**: the REST API, an MCP server with 31 tools so other agents can run a workspace, and the keys for both.
 
 ![A Tour of the Admin](site/public/devpost/06-a-tour-of-the-admin.png)
 
@@ -103,10 +105,11 @@ Each brand gets a workspace in the admin.
 
 No account needed.
 
+- **[Run as Theo](https://demo.loro.sh/f/demo-experiences/mirage-valley-road-trip?profile=theo&skip=1)**: runs Loro's agent live for a made-up ticket holder, with nothing to type, and streams the road trip as it's written.
 - **[Mirage Valley Road Trip](https://demo.loro.sh/f/demo-experiences/mirage-valley-road-trip)**: sign up and answer the questions, or open a sample profile to watch a new page made live.
 - **[Low Tide House](https://demo.loro.sh/f/demo-experiences/plan-your-stay)**: a stay planned after a booking.
 - **[Harbour & Grey](https://demo.loro.sh/f/demo-experiences/2-3768-west-2nd-avenue)**: a buyer's week in a listing.
-- **[The Admin](https://app.loro.sh)**: open to read. Every action asks for the admin password.
+- **[The Admin](https://app.loro.sh/admin?demo=1)**: open to read. Every action asks for the admin password.
 
 Add `?profile=<id>&skip=1` to an experience link to run it as one of its sample people and jump straight to the live page.
 
@@ -119,35 +122,35 @@ Loro is one Cloudflare Worker. Hono serves the REST API and the MCP server, Reac
 | Cloudflare product | What Loro uses it for |
 | --- | --- |
 | **D1** | One database for every workspace: profiles, answers, segments, experiences and every finished page |
-| **Workflows** | One durable run per page, saved step by step, so a failed section retries on its own |
-| **Durable Objects** | One room per run, streaming each section to the browser as server-sent events |
+| **Workflows** | One durable agent run per page, saved step by step, so a failed section retries on its own |
+| **Durable Objects** | One room per run, streaming each section to the browser as the agent writes it |
 | **KV** | A cache of the public start pages, cleared on save |
 | **Images** and **Stream** | The brand's photos and video |
 | **R2** | Audio |
 | **Analytics Engine** | Views and sign-ups, with no personal data |
-| **AI Gateway** | Every model call: GPT-5.4 mini writes outcomes, Claude Sonnet 5.5 runs the admin agent |
+| **AI Gateway** | Every model call, made with the AI SDK. The agent runs on GPT-5.4 mini in the funnel and Claude Sonnet 5.5 in the admin chat |
 | **Browser Rendering** | Reads listing pages that turn away a plain fetch |
 
-### How a Page Gets Made
+### How the Agent Builds a Page
 
-Every run goes in the same order: taste first, then the brand's own code, then the writing.
+Loro's agent works on rails. The brand sets the order and the tools; the agent decides what to look up and what to write. Every run goes the same way:
 
-1. **Taste.** Loro sends a person's favourites to Qloo, never their name or email, and runs the experience's lookups. A lookup says where to search, which kinds of place, popularity, price, which day a place must be open, how many to take and a weight for each favourite. Weighted lookups go through `POST /v2/insights`.
-2. **Code steps.** Each catalogue can ship TypeScript steps that run after taste. The road trip routes the drive with OSRM and asks Qloo for places near each night's town. The festival scores its whole bill against the person in one call. The venue does the same with its month of shows, the agency reads a listing from its link, and the date plan finds four stops a walk apart.
-3. **Writing.** Each section of the page is one model call with the brand's skills, the person's answers and a list of candidates. A section can only recommend a candidate by its Qloo entity id. Anything else is dropped.
+1. **Taste.** The agent reads the person's answers and pulls out their favourites, the kinds of place they'd like and where to look. Loro sends the favourites to Qloo, never a name or an email, and runs the experience's lookups. A lookup says where to search, which kinds of place, popularity, price, which day a place must be open, how many to take and a weight for each favourite. Weighted lookups go through `POST /v2/insights`. Then the agent writes a short brief on their taste, with an angle for each section. ([taste.server.ts](worker/core/workflow/taste.server.ts))
+2. **Tools.** Each catalogue gives the agent TypeScript tools, called code steps in the repo, that run after taste. The road trip routes the drive with OSRM and asks Qloo for places near each night's town ([route.ts](worker/steps/route.ts)). The festival scores its whole bill against the person in one call with `filter.results.entities` ([lineup.ts](worker/steps/lineup.ts)). The venue does the same with its month of shows ([programme.ts](worker/steps/programme.ts)), the agency reads a listing from its link with Browser Rendering ([listing.ts](worker/steps/listing.ts)), and the date plan finds four stops a walk apart ([date.ts](worker/steps/date.ts)).
+3. **Writing.** The agent writes each section from the brand's skills, the person's answers, its brief and a list of candidates. It can only recommend a candidate by its Qloo entity id, and anything else is dropped before the page shows it. If a banned word slips in, an edit pass rewrites that sentence. ([generate.server.ts](worker/core/workflow/generate.server.ts))
 
 ```
 code steps "before" → Taste → code steps "after-taste" → each section, in page order → Finish → code steps "finish"
 ```
 
-![How Taste Runs Through Theo's Page](site/public/devpost/08-how-taste-runs.png)
+![How the Agent Built Theo's Page](site/public/devpost/08-how-taste-runs.png)
 
 ### Keeping the Writing Honest
 
-Generated travel copy drifts towards the same words: "hidden gem", "vibrant", "unforgettable". Loro takes those choices away from the model.
+Generated travel copy drifts towards the same words: "hidden gem", "vibrant", "unforgettable". Loro takes those choices away from the agent.
 
 - Sections can only recommend Qloo entities, by id.
-- Code steps hand the model real facts: the route, the set times, the rooms in the listing.
+- Tools hand the agent real facts: the route, the set times, the rooms in the listing.
 - Each brand's voice lives in skills with a list of words it never uses, and an edit pass rewrites any that slip through.
 - Repeat picks are removed, and so are places someone only passes through.
 
@@ -269,11 +272,13 @@ Model calls go through AI Gateway with no provider keys in the Worker: Workers A
 An experience has three parts: a **start** page with the sign-up, the **intake** questions and the **artifact**, the page the person gets. Each part is built from a catalogue of React components, and the configuration is JSON in D1, so a brand's team changes copy, questions and photos in the admin without a developer.
 
 - **A catalogue** (`worker/catalogues/<id>/index.ts`) lists the components each part can use. Each component declares its props as fields (`f.text`, `f.image`, `f.list` and so on), and each field becomes a control in the admin.
-- **A code step** (`worker/steps/<name>.ts`) default-exports `defineStep({ type, name, at, fields, run })` and shows up in every experience's Workflow tab. `run` gets the person, their answers, `ctx.qloo` and `ctx.model`, and can hand candidates to the sections. Copy `steps/weather.ts` to start.
+- **A code step** (`worker/steps/<name>.ts`) is a tool the agent runs. It default-exports `defineStep({ type, name, at, fields, run })` and shows up in every experience's Workflow tab. `run` gets the person, their answers, `ctx.qloo` and `ctx.model`, and can hand candidates to the sections. Copy `steps/weather.ts` to start.
 - **A theme** (`worker/themes/<name>.css`) sets the design tokens. Import it in `themes/index.css` and name it in the catalogue.
 - **A custom design**: `useExperience` and `createExperienceClient` run the sign-up and questions from any React design. `/f/<workspace>/<slug>/plain` is a bare example built only on them.
 
-Every code step opens with a comment that says what it does in order, so a coding agent can read one and write the next.
+### Built for Coding Agents
+
+Loro was built with Claude Code, and built so a coding agent can extend it. Every code step opens with a comment that says what it does in order, so a coding agent can read one and write the next. With the MCP server below, Claude Code can build an experience, test the draft with `run_test` and fix the prompt without opening the admin.
 
 ## API and MCP
 
