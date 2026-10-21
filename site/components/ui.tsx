@@ -10,6 +10,7 @@ const buttonBase =
 const buttonVariants = {
   primary: "bg-accent text-white hover:bg-accent-hover",
   secondary: "bg-cream text-ink hover:bg-[#dcd9d6]",
+  outline: "border border-hairline bg-raised/70 text-ink hover:border-[#cfcac5] hover:bg-raised",
   ghost: "text-slate hover:text-ink",
   inverse: "bg-white text-deep hover:bg-cream",
   "inverse-secondary": "bg-white/10 text-white hover:bg-white/15",
@@ -41,6 +42,14 @@ export function ArrowRight({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 16 16" fill="none" aria-hidden className={cx("size-4", className)}>
       <path d="M3 8h10m-4-4 4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function ArrowUpRight({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden className={cx("size-4", className)}>
+      <path d="M5 11 11 5M6 5h5v5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

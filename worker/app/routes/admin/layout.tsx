@@ -9,7 +9,6 @@ import { Button } from "@/admin-components/ui/button";
 import { Sheet, SheetContent, SheetTitle } from "@/admin-components/ui/sheet";
 import type { Route } from "./+types/layout";
 import type { RouteHandle } from "@/lib/document";
-import { adminLocked } from "@core/admin-auth.server";
 import { listWorkspaces } from "@core/workspaces.server";
 import { readPreferences } from "@/lib/preferences";
 import { selectedWorkspace } from "@/lib/workspace.server";
@@ -26,7 +25,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   if (!current && !new URL(request.url).pathname.startsWith("/admin/docs")) {
     throw redirect("/admin/workspaces");
   }
-  return { mode: preferences.mode, workspaces, current, locked: adminLocked() };
+  return { mode: preferences.mode, workspaces, current };
 }
 
 export default function AdminLayout({ loaderData }: Route.ComponentProps) {
@@ -54,7 +53,7 @@ export default function AdminLayout({ loaderData }: Route.ComponentProps) {
         <div className="px-10 pt-10">
           <WorkspaceSwitcher workspaces={loaderData.workspaces} current={current} />
         </div>
-        <AdminNav signOut={loaderData.locked} />
+        <AdminNav />
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
@@ -80,7 +79,7 @@ export default function AdminLayout({ loaderData }: Route.ComponentProps) {
       <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
         <SheetContent side="left" className="w-64 p-0">
           <SheetTitle className="sr-only">Menu</SheetTitle>
-          <AdminNav onNavigate={() => setMenuOpen(false)} signOut={loaderData.locked} />
+          <AdminNav onNavigate={() => setMenuOpen(false)} />
         </SheetContent>
       </Sheet>
     </div>

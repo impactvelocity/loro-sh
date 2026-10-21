@@ -109,6 +109,7 @@ export function ExperienceRunner({
     fill: flow.fill,
     preview,
     optin: {
+      initial: options.prefill?.person ?? null,
       pending: flow.pending,
       errors: { ...flow.optinErrors, ...(flow.formError && stage === "start" ? { form: flow.formError } : {}) },
       submit: flow.optin,

@@ -1,0 +1,35 @@
+/*
+ * Mono: white paper and black ink, for one home told plainly. Archivo set
+ * bold and tight for display (font-display), Inter for everything you
+ * read. No tint anywhere: the listing's photographs bring the colour.
+ */
+:root[data-theme="mono"],
+[data-theme="mono"] {
+  color-scheme: light;
+  /* Set here too, so a theme scoped inside the admin keeps its own face. */
+  --font-ui: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display-face: "Archivo Variable", "Inter Variable", ui-sans-serif, sans-serif;
+  --radius: 0rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.15 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --primary: oklch(0.15 0 0);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.96 0 0);
+  --secondary-foreground: var(--foreground);
+  --muted: oklch(0.96 0 0);
+  --muted-foreground: oklch(0.46 0 0);
+  --accent: oklch(0.96 0 0);
+  --accent-foreground: var(--foreground);
+  --border: oklch(0.15 0 0 / 14%);
+  --input: oklch(0.15 0 0 / 22%);
+  --ring: oklch(0.15 0 0 / 40%);
+  /* The deep field: black. */
+  --deep: oklch(0.15 0 0);
+  --deep-foreground: oklch(1 0 0);
+  /* The quiet band between photographs: a flat light grey. */
+  --sand: oklch(0.955 0 0);
+}

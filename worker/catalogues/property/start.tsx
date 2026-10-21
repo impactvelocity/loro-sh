@@ -1,7 +1,7 @@
 /**
  * The Property catalogue's start page: one home, set like a single-listing
- * site. The address over the house, full bleed, with the sign-up in the
- * hero; the photographs as a staggered collage; the details in hairlines;
+ * site. The address big on the white with the sign-up beside it, then
+ * the house full bleed; the photographs as a staggered collage; the details in hairlines;
  * the street on a map; and an example of what Qloo does with someone's
  * taste, so the buyer knows what they'll get before they start.
  */
@@ -13,7 +13,7 @@ import { f } from "@core/catalogue/fields";
 import { parsePoint } from "@core/outcome/lookups";
 import { CatalogueLink, brandStyle } from "../basic/shared";
 import { cn } from "@/lib/utils";
-import { Accent, Logo, SectionHead, button, deep, display, displayHeadings, field, quiet, wrap } from "./shared";
+import { Logo, SectionHead, button, deep, display, displayHeadings, field, quiet, wrap } from "./shared";
 
 const images = (label: string, max: number) =>
   f.list({ label, itemLabel: "Photo", max, fields: { image: f.image({ label: "Photo" }), caption: f.text({ label: "Caption" }) } });
@@ -22,7 +22,7 @@ export const startLayout = defineLayout({
   fields: {
     brand: f.text({ label: "Agency name", default: "Harbour & Grey" }),
     logo: f.image({ label: "Logo", help: "Shown instead of the name." }),
-    accent: f.color({ label: "Accent", default: "#24332f" }),
+    accent: f.color({ label: "Accent", default: "#111111" }),
     nav: f.list({ label: "Navigation", itemLabel: "Link", max: 4, fields: { link: f.link({ label: "Link" }) } }),
     cta: f.link({ label: "Header button", default: { label: "See your week here", href: "#start" } }),
     footer: f.text({ label: "Footer note" }),
@@ -88,8 +88,8 @@ function SignupForm({
   top?: ReactNode;
   className?: string;
 }) {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState(ctx.optin.initial?.name ?? "");
+  const [email, setEmail] = useState(ctx.optin.initial?.email ?? "");
   const [sent, setSent] = useState(false);
   const { pending } = ctx.optin;
   const errors = sent ? ctx.optin.errors : {};
@@ -97,7 +97,7 @@ function SignupForm({
     <form
       noValidate
       className={cn(
-        "flex flex-col gap-5 overflow-hidden rounded-[calc(var(--radius)*2)] bg-card p-7 text-foreground shadow-[0_30px_80px_-30px_oklch(0.15_0.02_220/0.6)] @2xl:p-8",
+        "flex flex-col gap-5 overflow-hidden border border-foreground bg-card p-7 text-foreground @2xl:p-8",
         top && "pt-0 @2xl:pt-0",
         className,
       )}
@@ -110,7 +110,7 @@ function SignupForm({
       {top && <div className="-mx-7 border-b border-border bg-[var(--sand)]/60 px-7 py-4 @2xl:-mx-8 @2xl:px-8">{top}</div>}
       {(title || body) && (
         <div className="flex flex-col gap-2">
-          {/* h3: the layout sets every h2 in serif, and the form's title stays in Inter. */}
+          {/* h3: the layout sets every h2 in the display face, and the form's title stays in Inter. */}
           {title && <h3 className="text-xl font-semibold tracking-[-0.02em] text-balance">{title}</h3>}
           {body && <p className="text-[0.95rem] leading-relaxed text-muted-foreground text-pretty">{body}</p>}
         </div>
@@ -158,11 +158,11 @@ function SignupForm({
   );
 }
 
-/** The listing up top: the address over the house, the sign-up beside it, the photographs below. */
+/** The listing up top: the address big on the white with the sign-up beside it, then the house full width and the photographs. */
 const listing = defineComponent({
   type: "listing",
   name: "Listing",
-  description: "The address over a full-bleed photo, with the sign-up, then the photos.",
+  description: "The address in big type with the sign-up, then a full-width photo and the rest of the photos.",
   icon: Building2Icon,
   fields: {
     status: f.text({ label: "Status", placeholder: "New build", help: "Shown before the neighbourhood." }),
@@ -187,51 +187,41 @@ const listing = defineComponent({
     const facts = [props.status, props.area, props.beds && `${props.beds} bed`, props.baths && `${props.baths} bath`, props.size].filter(Boolean);
     return (
       <section id={id}>
-        <div className="relative isolate overflow-hidden bg-[var(--deep)] text-white">
-          {cover && (
-            <>
-              <img src={cover.image} alt={cover.caption} fetchPriority="high" className="absolute inset-0 -z-10 size-full object-cover" />
-              <div aria-hidden className="absolute inset-0 -z-10 bg-linear-to-t from-black/85 via-black/45 to-black/15" />
-              <div aria-hidden className="absolute inset-0 -z-10 bg-linear-to-r from-black/45 via-black/10 to-transparent" />
-            </>
-          )}
-          <div className={cn(wrap, "grid min-h-[min(88svh,56rem)] gap-12 pt-24 pb-12 @3xl:pt-32 @5xl:grid-cols-12 @5xl:items-end @5xl:gap-16 @5xl:pb-16")}>
-            <div className="flex flex-col gap-6 self-end @5xl:col-span-7">
-              <h1 className={cn(display, "text-[clamp(3.5rem,9cqi,8.5rem)] leading-[0.88] text-balance")}>
-                <Accent text={props.address} />
-              </h1>
-              <p className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-lg">
-                {props.price && <span className="font-semibold tabular-nums">{props.price}</span>}
-                <span className="opacity-80">{facts.join(" · ")}</span>
-              </p>
-              {props.body && <p className="max-w-xl text-lg leading-relaxed text-pretty opacity-90">{props.body}</p>}
-              {!props.signup && props.cta.label && (
-                <CatalogueLink href={props.cta.href} ctx={ctx} className={cn(button, "h-14 self-start bg-white px-8 text-base text-black")}>
-                  {props.cta.label}
-                  <ArrowRightIcon className="size-4" />
-                </CatalogueLink>
-              )}
-            </div>
-            {props.signup && (
-              <div id="start" className="scroll-mt-6 @5xl:col-span-5 @5xl:col-start-8">
-                <SignupForm
-                  ctx={ctx}
-                  title={props.formTitle}
-                  body={props.formBody}
-                  askName={props.askName}
-                  label={props.button}
-                  note={props.note}
-                  className="mx-auto max-w-md @5xl:mr-0"
-                />
-              </div>
+        <div className={cn(wrap, "grid gap-12 pt-14 pb-12 @3xl:pt-20 @5xl:grid-cols-12 @5xl:items-end @5xl:gap-16 @5xl:pb-16")}>
+          <div className="flex flex-col gap-7 @5xl:col-span-7">
+            <h1 className={cn(display, "text-[clamp(3.5rem,9cqi,8.5rem)] [line-height:0.86] text-balance")}>{props.address}</h1>
+            <p className="flex flex-wrap items-baseline gap-x-4 gap-y-1 border-t border-foreground pt-5 text-lg">
+              {props.price && <span className="font-semibold tabular-nums">{props.price}</span>}
+              <span className="text-muted-foreground">{facts.join(" · ")}</span>
+            </p>
+            {props.body && <p className="max-w-xl text-lg leading-relaxed text-pretty">{props.body}</p>}
+            {!props.signup && props.cta.label && (
+              <CatalogueLink href={props.cta.href} ctx={ctx} className={cn(button, "h-14 self-start px-8 text-base")}>
+                {props.cta.label}
+                <ArrowRightIcon className="size-4" />
+              </CatalogueLink>
             )}
           </div>
+          {props.signup && (
+            <div id="start" className="scroll-mt-6 @5xl:col-span-5 @5xl:col-start-8">
+              <SignupForm
+                ctx={ctx}
+                title={props.formTitle}
+                body={props.formBody}
+                askName={props.askName}
+                label={props.button}
+                note={props.note}
+                className="max-w-md @5xl:mr-0 @5xl:ml-auto"
+              />
+            </div>
+          )}
         </div>
+        {cover && <img src={cover.image} alt={cover.caption} fetchPriority="high" className="aspect-[16/9] w-full object-cover @4xl:aspect-[21/9]" />}
         {rest.length > 0 && (
           <div className={cn(wrap, "grid gap-3 py-3 @3xl:grid-cols-4")}>
             {rest.slice(0, 4).map((photo, i) => (
               <figure key={i} className="flex flex-col gap-2">
-                <img src={photo.image} alt={photo.caption} loading="lazy" className="aspect-[4/3] w-full rounded-(--radius) object-cover" />
+                <img src={photo.image} alt={photo.caption} loading="lazy" className="aspect-[4/3] w-full object-cover" />
                 {photo.caption && <figcaption className={quiet}>{photo.caption}</figcaption>}
               </figure>
             ))}
@@ -344,7 +334,7 @@ const facts = defineComponent({
     <section id={id} className="bg-[var(--sand)]">
       <div className={cn(wrap, "flex flex-col gap-12 py-24 @4xl:py-28")}>
         {props.heading && <SectionHead title={props.heading} />}
-        <dl className="grid border-t border-foreground/15 @2xl:grid-cols-2 @4xl:grid-cols-4">
+        <dl className="grid border-t border-foreground @2xl:grid-cols-2 @4xl:grid-cols-4">
           {props.items.map((item, i) => (
             <div key={i} className="flex flex-col gap-1.5 border-b border-foreground/15 py-5 @2xl:pr-8">
               <dt className={quiet}>{item.label}</dt>
@@ -507,11 +497,11 @@ const agent = defineComponent({
           {props.heading && <h2 className={cn(display, "text-[clamp(2.75rem,6cqi,5.5rem)] text-balance")}>{props.heading}</h2>}
           {props.body && <p className="max-w-md text-lg leading-relaxed text-pretty text-muted-foreground">{props.body}</p>}
         </div>
-        <div className="flex items-start gap-6 border-t border-border pt-6 @4xl:col-span-5 @4xl:col-start-8 @4xl:self-end">
+        <div className="flex items-start gap-6 border-t border-foreground pt-6 @4xl:col-span-5 @4xl:col-start-8 @4xl:self-end">
           {props.photo ? (
             <img src={props.photo} alt={props.name} className="size-20 shrink-0 rounded-full object-cover" />
           ) : (
-            <span aria-hidden className={cn(display, "flex size-20 shrink-0 items-center justify-center rounded-full bg-[var(--sand)] text-3xl italic")}>
+            <span aria-hidden className={cn(display, "flex size-20 shrink-0 items-center justify-center rounded-full bg-[var(--sand)] text-3xl")}>
               {initials}
             </span>
           )}
@@ -613,7 +603,7 @@ const faq = defineComponent({
   Component: ({ id, props }) => (
     <section id={id} className={cn(wrap, "grid gap-x-10 gap-y-10 py-24 @4xl:grid-cols-12 @4xl:py-32")}>
       {props.heading && <h2 className={cn(display, "text-[clamp(2.75rem,6cqi,5.5rem)] @4xl:col-span-4")}>{props.heading}</h2>}
-      <div className="flex flex-col border-t border-border @4xl:col-span-7 @4xl:col-start-6">
+      <div className="flex flex-col border-t border-foreground @4xl:col-span-7 @4xl:col-start-6">
         {props.items.map((item, i) => (
           <details key={i} className="group border-b border-border py-5">
             <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-medium tracking-[-0.01em]">

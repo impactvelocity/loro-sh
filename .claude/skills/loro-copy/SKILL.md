@@ -134,7 +134,8 @@ Harry likes punchy contrasts, fragments and parallel lines. `human-writing` flag
 
 - **Admin:** Title Case for page titles, section headings, card and dialog titles, stat labels and buttons ("New Segment", "Save Changes"). Sentence case for body copy, field labels, hints and menu items.
 - **Docs:** Title Case article titles and headings, as in `core/docs.ts`. Sentence case everywhere else.
-- **Experiences and the sales page:** sentence case everywhere, including headings and buttons.
+- **Sales page (loro.sh):** Title Case for every headline and title: section headings, card and step titles, diagram labels ("The Parts That Make It Work", "The Brand", "How a Brand Experience Works"). Lowercase short articles, conjunctions and prepositions (a, an, the, and, or, for, to, of, in, on, at, by, with) unless they come first. Sentence case for body copy.
+- **Experiences:** sentence case everywhere, including headings and buttons.
 
 ### Spelling, numbers and punctuation
 
@@ -155,7 +156,7 @@ Use these terms the same way every time. Repeat the clearest word rather than cy
 
 | Say | Not (in user-facing copy) |
 | --- | --- |
-| experience | funnel (the code name) |
+| experience | funnel (the code name), except the sales page's "The Experience Funnel": the four stages start page, intake, personalise, branded outcome |
 | start page, questions, outcome | intake (fine in the admin and docs), artifact, generation |
 | profile, person, segment | lead, contact, user (for the brand's customers) |
 | taste | preferences, interests (when you mean Qloo's taste signals) |

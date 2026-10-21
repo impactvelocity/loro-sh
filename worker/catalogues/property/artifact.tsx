@@ -1,12 +1,13 @@
 /**
  * The Property catalogue's outcome: how one listing fits one buyer, set
  * like the start page. A cover with their name over the house, then an
- * index: every section's heading in big serif on the left (sticky as you
+ * index: every section's heading big and bold on the left (sticky as you
  * read), the section on the right. The listing's facts live in the
  * workflow prompt, so every section can read them; the buyer's answers
  * come from the profile.
  *
- * - Cover: their name over the house, and the page's main call to action.
+ * - Cover: their name big on the white, the house full width under it,
+ *   and the page's main call to action.
  *   While the page is made it shows the search instead: the favourites
  *   matched, the places found near the house, the steps as they finish.
  * - How It Fits: what lines up with how they live, and what to weigh.
@@ -30,7 +31,7 @@ import { cn } from "@/lib/utils";
 import { artifactComponents as basicArtifact } from "../basic/artifact";
 import { RunFooter } from "../basic/run-footer";
 import { CatalogueLink, brandStyle } from "../basic/shared";
-import { Accent, Chip, Frame, Logo, button, deep, display, displayHeadings, ghost, quiet, restyle, wrap } from "./shared";
+import { Chip, Frame, Logo, button, deep, display, displayHeadings, ghost, quiet, restyle, wrap } from "./shared";
 
 const pulse = "animate-pulse rounded-(--radius) bg-foreground/[0.06]";
 const tokens = "Use {{first_name}}, {{name}} or {{answers.<id>}} to fill in from their profile.";
@@ -84,7 +85,7 @@ export const artifactLayout = defineLayout({
   fields: {
     brand: f.text({ label: "Agency name", default: "Harbour & Grey" }),
     logo: f.image({ label: "Logo" }),
-    accent: f.color({ label: "Accent", default: "#24332f" }),
+    accent: f.color({ label: "Accent", default: "#111111" }),
     cta: f.link({ label: "Header button", default: { label: "Book a private viewing", href: "#viewing" }, help: "Stays at the top as they read, once the page is ready." }),
     footer: f.text({ label: "Footer note" }),
   },
@@ -143,40 +144,38 @@ const cover = defineComponent({
   },
   Component: ({ props, ctx }) => {
     const making = ctx.outcome?.status === "running" ? ctx.outcome : null;
-    return (
-      <header className="relative isolate -mx-5 overflow-hidden bg-[var(--deep)] text-white @3xl:-mx-10 @6xl:mx-0 @6xl:rounded-(--radius)">
-        {props.image && (
-          <>
-            <img
-              src={props.image}
-              alt=""
-              fetchPriority="high"
-              className={cn(
-                "absolute inset-0 -z-10 size-full object-cover transition-[filter] duration-1000",
-                making && "animate-drift brightness-75 motion-reduce:animate-none",
-              )}
-            />
-            <div aria-hidden className="absolute inset-0 -z-10 bg-linear-to-t from-black/80 via-black/35 to-black/5" />
-          </>
-        )}
-        <div className="flex min-h-[min(78svh,46rem)] flex-col justify-end px-5 pt-40 pb-10 @3xl:px-10 @3xl:pb-14 @6xl:px-14">
-          {making ? (
+    // While it's made: the search over the house, in the dark.
+    if (making)
+      return (
+        <header className="relative isolate -mx-5 overflow-hidden bg-[var(--deep)] text-white @3xl:-mx-10 @6xl:mx-0">
+          {props.image && (
+            <>
+              <img src={props.image} alt="" fetchPriority="high" className="absolute inset-0 -z-10 size-full animate-drift object-cover brightness-75 motion-reduce:animate-none" />
+              <div aria-hidden className="absolute inset-0 -z-10 bg-linear-to-t from-black/85 via-black/45 to-black/10" />
+            </>
+          )}
+          <div className="flex min-h-[min(78svh,46rem)] flex-col justify-end px-5 pt-40 pb-10 @3xl:px-10 @3xl:pb-14 @6xl:px-14">
             <Making outcome={making} heading={ctx.fill(props.making)} />
-          ) : (
-            <div className="flex animate-in flex-col gap-6 duration-1000 fade-in slide-in-from-bottom-4">
-              <h1 className={cn(display, "max-w-5xl text-[clamp(3.25rem,8.5cqi,8rem)] leading-[0.9] text-balance")}>
-                <Accent text={ctx.fill(props.title)} />
-              </h1>
-              {props.details && <p className="text-lg font-medium opacity-90">{ctx.fill(props.details)}</p>}
-              {props.intro && <p className="max-w-xl text-lg leading-relaxed text-pretty opacity-85">{ctx.fill(props.intro)}</p>}
-              {props.link.label && (
-                <CatalogueLink href={props.link.href} ctx={ctx} className={cn(button, "mt-2 h-14 self-start bg-white px-8 text-base text-black")}>
-                  {props.link.label}
-                </CatalogueLink>
-              )}
-            </div>
+          </div>
+        </header>
+      );
+    // Ready: their name big and black on the white, the facts and the button on a rule, the house full width.
+    return (
+      <header className="flex animate-in flex-col gap-10 pt-10 duration-1000 fade-in slide-in-from-bottom-4 @3xl:gap-12 @3xl:pt-16">
+        <h1 className={cn(display, "max-w-[14ch] text-[clamp(3.5rem,10.5cqi,10rem)] [line-height:0.88] text-balance")}>{ctx.fill(props.title)}</h1>
+        <div className="grid gap-x-10 gap-y-6 border-t border-foreground pt-6 @4xl:grid-cols-12 @4xl:items-start">
+          {props.details && <p className="text-lg font-semibold tracking-[-0.01em] @4xl:col-span-4">{ctx.fill(props.details)}</p>}
+          {props.intro && <p className="max-w-xl text-lg leading-relaxed text-pretty @4xl:col-span-5">{ctx.fill(props.intro)}</p>}
+          {props.link.label && (
+            <CatalogueLink href={props.link.href} ctx={ctx} className={cn(button, "h-14 self-start px-8 text-base @4xl:col-span-3 @4xl:justify-self-end")}>
+              {props.link.label}
+              <ArrowRightIcon className="size-4" />
+            </CatalogueLink>
           )}
         </div>
+        {props.image && (
+          <img src={props.image} alt="" fetchPriority="high" className="-mx-5 aspect-[16/9] w-[calc(100%+2.5rem)] max-w-none object-cover @3xl:-mx-10 @3xl:w-[calc(100%+5rem)] @4xl:aspect-[2/1] @6xl:mx-0 @6xl:w-full" />
+        )}
       </header>
     );
   },
@@ -204,8 +203,8 @@ function Making({ outcome, heading }: { outcome: OutcomeView; heading: string })
     .slice(-MAKING_LINES);
   return (
     <div role="status" aria-live="polite" className="flex flex-col gap-8">
-      <h1 className={cn(display, "max-w-4xl text-[clamp(3rem,7cqi,6.5rem)] leading-[0.92] text-balance")}>
-        <Accent text={heading} />
+      <h1 className={cn(display, "max-w-4xl text-[clamp(3rem,7cqi,6.5rem)] [line-height:0.92] text-balance")}>
+        {heading}
         <span aria-hidden className="inline-flex gap-[0.12em] pl-[0.12em]">
           {[0, 1, 2].map((i) => (
             <span key={i} className="animate-pulse motion-reduce:animate-none" style={{ animationDelay: `${i * 200}ms` }}>
@@ -221,7 +220,7 @@ function Making({ outcome, heading }: { outcome: OutcomeView; heading: string })
             {matched.map((name, i) => (
               <li
                 key={name}
-                className="animate-in rounded-full bg-white/12 px-3.5 py-1.5 text-sm font-medium ring-1 ring-white/20 backdrop-blur fill-mode-both fade-in zoom-in-95 duration-500"
+                className="animate-in bg-white/12 px-3 py-1.5 text-sm font-medium ring-1 ring-white/25 backdrop-blur fill-mode-both fade-in zoom-in-95 duration-500"
                 style={{ animationDelay: `${i * 90}ms` }}
               >
                 {name}
@@ -337,7 +336,7 @@ const fit = defineGenerated({
     return (
       <Frame heading={props.heading} ctx={ctx}>
         {data?.verdict && (
-          <p className={cn(display, "text-[clamp(1.9rem,3.6cqi,2.75rem)] leading-[1.1] text-pretty")}>
+          <p className={cn(display, "text-[clamp(1.9rem,3.6cqi,2.75rem)] [line-height:1.1] text-pretty")}>
             {data.verdict}
             <Writing on={writing && fits.length === 0} />
           </p>
@@ -420,7 +419,7 @@ const regulars = defineGenerated({
                   </div>
                 )}
                 <div className="flex flex-col gap-2">
-                  {item?.role && <span className="text-sm font-medium text-[var(--brand)]">{item.role}</span>}
+                  {item?.role && <span className="text-sm text-muted-foreground">{item.role}</span>}
                   {place ? (
                     <a
                       href={mapsLink(place)}
@@ -438,7 +437,7 @@ const regulars = defineGenerated({
                       {[minutes, place.neighbourhood, dollars(place.priceLevel), place.tags[0]].filter(Boolean).join(" · ")}
                     </span>
                   )}
-                  {item?.standsIn && <p className={cn(display, "text-2xl italic")}>In place of {item.standsIn}</p>}
+                  {item?.standsIn && <p className="text-lg font-semibold tracking-[-0.015em]">In place of {item.standsIn}</p>}
                   {item?.why && (
                     <p className="leading-relaxed text-pretty">
                       {item.why}
@@ -534,7 +533,7 @@ const explainer = defineComponent({
     const total = started.length && ended.length ? Math.round((Math.max(...ended) - Math.min(...started)) / 1000) : null;
 
     return (
-      <section id="how" className="flex scroll-mt-24 flex-col gap-12 rounded-[calc(var(--radius)*2)] border border-dashed border-foreground/25 p-6 @3xl:p-10">
+      <section id="how" className="flex scroll-mt-24 flex-col gap-12 bg-[var(--sand)] p-6 @3xl:p-10">
         <div className="grid gap-x-10 gap-y-5 @4xl:grid-cols-12 @4xl:items-end">
           <div className="flex flex-col items-start gap-4 @4xl:col-span-7">
             {props.label && <Chip tone="taste">{props.label}</Chip>}
@@ -635,7 +634,7 @@ const explainer = defineComponent({
                         {entity.affinity != null ? (
                           <span className="flex items-center gap-2">
                             <span className="h-1.5 w-16 overflow-hidden rounded-full bg-foreground/10">
-                              <span className="block h-full bg-[var(--brand)]" style={{ width: `${Math.round(entity.affinity * 100)}%` }} />
+                              <span className="block h-full bg-foreground" style={{ width: `${Math.round(entity.affinity * 100)}%` }} />
                             </span>
                             <span className="tabular-nums">{Math.round(entity.affinity * 100)}%</span>
                           </span>
@@ -739,15 +738,15 @@ const dayPlan = restyle(
         {days.map((day, d) => (
           <div key={d} className="flex flex-col gap-2">
             {days.length > 1 && day?.label && <h3 className="text-lg font-semibold">{day.label}</h3>}
-            <ol className="relative flex flex-col border-l border-foreground/20 pl-8">
+            <ol className="relative flex flex-col border-l border-foreground pl-8">
               {(day?.stops ?? []).map((stop, s) => {
                 const place = ctx.outcome?.entity(stop?.entity) ?? null;
                 const last = writing && d === days.length - 1 && s === (day?.stops?.length ?? 0) - 1;
                 return (
                   <li key={s} className="relative grid gap-4 pb-10 @2xl:grid-cols-[1fr_9rem] @2xl:gap-8">
-                    <span aria-hidden className="absolute top-2 -left-[2.32rem] size-2.5 rounded-full bg-[var(--brand)] ring-4 ring-background" />
+                    <span aria-hidden className="absolute top-2 -left-[2.32rem] size-2.5 bg-foreground ring-4 ring-background" />
                     <div className="flex flex-col gap-1.5">
-                      <time className={cn(display, "text-2xl italic")}>{stop?.time}</time>
+                      <time className={cn(display, "text-2xl")}>{stop?.time}</time>
                       {place ? (
                         <a
                           href={mapsLink(place)}
@@ -797,11 +796,11 @@ const recap = defineComponent({
     phone: f.text({ label: "Phone" }),
   },
   Component: ({ props, ctx }) => (
-    <aside id="viewing" style={deep} className="-mx-5 grid scroll-mt-24 overflow-hidden @3xl:-mx-10 @4xl:grid-cols-12 @6xl:mx-0 @6xl:rounded-(--radius)">
+    <aside id="viewing" style={deep} className="-mx-5 grid scroll-mt-24 overflow-hidden @3xl:-mx-10 @4xl:grid-cols-12 @6xl:mx-0">
       {props.image && <img src={props.image} alt="" loading="lazy" className="aspect-[4/3] w-full object-cover @4xl:col-span-6 @4xl:aspect-auto @4xl:h-full" />}
       <div className="flex flex-col items-start gap-5 px-5 py-12 @3xl:px-10 @4xl:col-span-6 @4xl:py-16 @6xl:px-14">
         <h2 className={cn(display, "text-[clamp(2.5rem,5cqi,4.25rem)] text-balance")}>
-          <Accent text={props.address} />
+          {props.address}
         </h2>
         <p className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-lg">
           {props.price && <span className="font-semibold tabular-nums">{props.price}</span>}

@@ -60,7 +60,7 @@ const portrait = {
 
 const point = "49.27042, -123.18690";
 const address = "2-3768 West 2nd Avenue";
-const brand = { brand: "Harbour & Grey", logo: "", accent: "#24332f" };
+const brand = { brand: "Harbour & Grey", logo: "", accent: "#111111" };
 const phone = "604-555-0148";
 
 // Skills in the Harbour & Grey workspace (Context > Skills).
@@ -80,12 +80,30 @@ export default defineCatalogue({
   id: "property",
   name: "Property",
   description: "One listing, matched to how a buyer lives, with their new regulars nearby.",
-  theme: "coast",
+  theme: "mono",
   parts: {
     start: { layout: startLayout, components: startComponents },
     intake: { layout: intakeLayout, components: intakeComponents },
     artifact: { layout: artifactLayout, components: artifactComponents },
   },
+  // Sam's answers from the demo workspace's example run.
+  samples: [
+    {
+      id: "sam",
+      person: { name: "Sam Okoro", email: "sam.okoro@example.com" },
+      answers: {
+        household: "The two of us",
+        work: "UBC",
+        mornings: ["A run or a swim", "Walking the dog"],
+        weekends: ["Trails and forest", "Beach and the seawall"],
+        evenings: "Our local, same table",
+        favourites: "In Seattle: Victrola Coffee, Canlis for anniversaries, Canon for cocktails",
+        music: "Fleet Foxes, Bon Iver",
+        hosting: 3,
+        "must-haves": "A beach the dog is allowed on",
+      },
+    },
+  ],
   example: {
     catalogue: "property",
     name: address,

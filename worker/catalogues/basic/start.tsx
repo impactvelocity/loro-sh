@@ -116,8 +116,8 @@ const optin = defineComponent({
     note: f.text({ label: "Small print", default: "We'll only email you about this." }),
   },
   Component: function Optin({ props, ctx }) {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
+    const [name, setName] = useState(ctx.optin.initial?.name ?? "");
+    const [email, setEmail] = useState(ctx.optin.initial?.email ?? "");
     const { errors, pending } = ctx.optin;
 
     return (

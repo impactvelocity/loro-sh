@@ -8,6 +8,7 @@ import { data, useFetcher, useSearchParams } from "react-router";
 import { EyeIcon, KeyRoundIcon, PlusIcon } from "lucide-react";
 
 import type { Route } from "./+types/mcp";
+import { hasAdminSession } from "@core/admin-auth.server";
 import type { ApiKeyRecord } from "@core/api-keys.server";
 import { ApiKeyError, createApiKey, listApiKeys, revokeApiKey } from "@core/api-keys.server";
 import { since } from "@core/people";
@@ -30,6 +31,7 @@ import { Field, FieldDescription, FieldLabel } from "@/admin-components/ui/field
 import { Input } from "@/admin-components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/admin-components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@/admin-components/ui/tabs";
+import { useReadOnly } from "@/hooks/use-read-only";
 import { daysAgo } from "@/lib/format";
 import { currentWorkspace } from "@/lib/workspace.server";
 
@@ -39,9 +41,11 @@ export function meta() {
 
 export async function loader({ request }: Route.LoaderArgs) {
   const workspace = await currentWorkspace(request);
+  const keys = await listApiKeys(workspace.id);
   return {
     workspace,
-    keys: await listApiKeys(workspace.id),
+    // A key can do anything, so view only, the secrets stay on the server.
+    keys: (await hasAdminSession(request)) ? keys : keys.map((key) => ({ ...key, secret: null })),
     origin: new URL(request.url).origin,
     now: Math.floor(Date.now() / 1000),
   };
@@ -96,6 +100,7 @@ function CopyField({ value, label }: { value: string; label: string }) {
 type KeyResult = { error: string | null; secret?: string };
 
 function ApiKeys({ keys, locked, now }: { keys: ApiKeyRecord[]; locked: boolean; now: number }) {
+  const readOnly = useReadOnly();
   // A fresh fetcher each time the dialog opens, so it doesn't show the last key or error.
   const [attempt, setAttempt] = useState(0);
   const fetcher = useFetcher<KeyResult>({ key: `api-key-${attempt}` });
@@ -115,20 +120,22 @@ function ApiKeys({ keys, locked, now }: { keys: ApiKeyRecord[]; locked: boolean;
             ? "Demo workspaces are read-only, so they don't take keys."
             : "Agents over MCP, and changes over the API, need one of these. Each key works on this workspace only."}
         </p>
-        <Button
-          size="sm"
-          className="shrink-0"
-          disabled={locked}
-          onClick={() => {
-            setName("");
-            setViewing(null);
-            setAttempt((n) => n + 1);
-            setOpen(true);
-          }}
-        >
-          <PlusIcon data-icon="inline-start" />
-          New Key
-        </Button>
+        {!readOnly && (
+          <Button
+            size="sm"
+            className="shrink-0"
+            disabled={locked}
+            onClick={() => {
+              setName("");
+              setViewing(null);
+              setAttempt((n) => n + 1);
+              setOpen(true);
+            }}
+          >
+            <PlusIcon data-icon="inline-start" />
+            New Key
+          </Button>
+        )}
       </div>
       {keys.length === 0 ? null : (
         <Table>
@@ -165,13 +172,15 @@ function ApiKeys({ keys, locked, now }: { keys: ApiKeyRecord[]; locked: boolean;
                         <EyeIcon />
                       </Button>
                     )}
-                    <ConfirmDeleteButton
-                      iconOnly
-                      label={`Revoke ${key.name}`}
-                      confirmTitle={`Revoke ${key.name}?`}
-                      confirmDescription="Anything using it stops working straight away. This can't be undone."
-                      onConfirm={() => fetcher.submit({ intent: "revoke-key", id: key.id }, { method: "post" })}
-                    />
+                    {!readOnly && (
+                      <ConfirmDeleteButton
+                        iconOnly
+                        label={`Revoke ${key.name}`}
+                        confirmTitle={`Revoke ${key.name}?`}
+                        confirmDescription="Anything using it stops working straight away. This can't be undone."
+                        onConfirm={() => fetcher.submit({ intent: "revoke-key", id: key.id }, { method: "post" })}
+                      />
+                    )}
                   </div>
                 </TableCell>
               </TableRow>

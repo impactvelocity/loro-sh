@@ -1,0 +1,16 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	// The loro.sh sales page: `next build` writes a static site to out/, and
+	// this Worker serves those files. No server code, so there's no `main`.
+	"name": "loro-site",
+	"compatibility_date": "2026-10-01",
+	"assets": {
+		"directory": "./out",
+		// /draft serves draft.html; unknown paths get the exported 404 page.
+		"html_handling": "auto-trailing-slash",
+		"not_found_handling": "404-page"
+	},
+	// Attaches loro.sh to this Worker on deploy. The zone already holds app.
+	// and demo.loro.sh; this fails if the apex has a DNS record of its own.
+	"routes": [{ "pattern": "loro.sh", "custom_domain": true }]
+}

@@ -44,7 +44,7 @@ export function HowItWorks() {
     <section id="how-it-works" className="scroll-mt-16 pt-24 sm:pt-32">
       <Container>
         <div className="max-w-[40rem]">
-          <h2 className="font-display text-4xl leading-[1.05] tracking-[-0.015em] text-balance sm:text-5xl">
+          <h2 className="font-display text-4xl leading-[1.05] tracking-normal text-balance sm:text-5xl">
             Your thing, their answers, their taste
           </h2>
           <p className="mt-5 text-lg text-pretty text-slate">
@@ -73,7 +73,7 @@ export function HowItWorks() {
 
         <div className="mt-24 grid grid-cols-1 gap-10 lg:grid-cols-12">
           <div className="lg:col-span-4">
-            <h3 className="font-display text-3xl leading-tight tracking-[-0.01em] text-balance">
+            <h3 className="font-display text-3xl leading-tight tracking-normal text-balance">
               One festival, two emails
             </h3>
             <p className="mt-4 text-[17px] leading-relaxed text-pretty text-slate">
@@ -108,7 +108,7 @@ export function HowItWorks() {
 
         <div className="mt-24 grid grid-cols-1 gap-10 lg:grid-cols-12">
           <div className="lg:col-span-4">
-            <h3 className="font-display text-3xl leading-tight tracking-[-0.01em] text-balance">
+            <h3 className="font-display text-3xl leading-tight tracking-normal text-balance">
               Their regulars, wherever they&rsquo;re going
             </h3>
             <p className="mt-4 text-[17px] leading-relaxed text-pretty text-slate">

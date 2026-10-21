@@ -8,7 +8,7 @@
  * under Connect → Keys, or come back from POST /api/workspaces.
  *
  * With ADMIN_PASSWORD set, everything but the public experience flow also
- * needs a key or the admin's sign-in cookie (`adminGate`), so the password
+ * needs a key or the admin's unlock cookie (`adminGate`), so the password
  * covers what the admin shows, not just its pages.
  */
 import { createMiddleware } from "hono/factory";
@@ -46,7 +46,7 @@ const publicRoutes: [method: string, path: RegExp][] = [
   ["GET", /^\/experiences\/[^/]+\/runs\/[^/]+(\/events)?$/],
 ];
 
-const signInMessage = "Sign in to the admin, or send an API key as a bearer token.";
+const signInMessage = "Unlock the admin, or send an API key as a bearer token.";
 
 /** Routes under /workspaces/:workspace, once it's found. */
 export const adminGate = createMiddleware<WorkspaceEnv>(async (c, next) => {
@@ -60,8 +60,8 @@ export const adminGate = createMiddleware<WorkspaceEnv>(async (c, next) => {
   await next();
 });
 
-/** Routes above any one workspace (listing and making them): only the admin's sign-in. */
+/** Routes above any one workspace (listing and making them): only the admin unlocked. */
 export const requireAdmin = createMiddleware(async (c, next) => {
-  if (!(await hasAdminSession(c.req.raw))) throw new ApiError(401, "Sign in to the admin first.");
+  if (!(await hasAdminSession(c.req.raw))) throw new ApiError(401, "Unlock the admin first.");
   await next();
 });

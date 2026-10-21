@@ -6,10 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "preview:cf": "next build && wrangler dev",
+    "deploy": "next build && wrangler deploy"
   },
   "dependencies": {
     "next": "16.4.2",
+    "posthog-js": "1.438.13",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },
@@ -21,7 +24,8 @@
     "eslint": "^9",
     "eslint-config-next": "16.4.2",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.151.0"
   },
   "packageManager": "pnpm@9.14.2"
 }

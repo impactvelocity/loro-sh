@@ -38,9 +38,18 @@ export type AnswerValue = string | string[] | number | null;
 export type Answers = Record<string, AnswerValue>;
 export type ProfileRow = { id: string; question: string; answer: string };
 
+/**
+ * A made-up person and their answers, for opening an experience with
+ * everything filled in. Answers are keyed by the catalogue example's
+ * intake ids.
+ */
+export type SampleProfile = { id: string; person: Person; answers: Answers };
+
 /** The sign-up on the start page. */
 export type Optin = {
   submit: (person: Person) => void;
+  /** What the form starts with: a sample profile's name and email, or nothing. */
+  initial: Person | null;
   pending: boolean;
   /** Per field, plus `form` for anything that isn't one field's (the network, the server). */
   errors: Partial<Record<keyof Person | "form", string>>;
@@ -264,6 +273,14 @@ export type Catalogue = {
    * Context, unless one with that id is already there.
    */
   skills?: { id: string; title: string; description: string }[];
+  /**
+   * Sample profiles for demos. /f/:workspace/:slug?profile=<id> opens an
+   * experience from this catalogue with the sign-up and the answers filled
+   * in. They still send both, so it's a real sign-up and a real run.
+   * &skip=1 sends them as the page opens, which also works with the
+   * intake off: the demo stands in for the system that would trigger it.
+   */
+  samples?: SampleProfile[];
 };
 
 export function defineComponent<F extends Fields>(definition: ComponentDefinition<F>) {

@@ -38,6 +38,7 @@ import { Spinner } from "@/admin-components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/admin-components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@/admin-components/ui/tabs";
 import { Textarea } from "@/admin-components/ui/textarea";
+import { useReadOnly } from "@/hooks/use-read-only";
 
 export type TestRun = {
   id: string;
@@ -388,6 +389,7 @@ export function ExperienceTests({
   const [viewing, setViewing] = useState<string | null>(null);
   const deleter = useFetcher();
   const revalidator = useRevalidator();
+  const readOnly = useReadOnly();
   const shown = tests.find((test) => test.id === viewing) ?? null;
 
   return (
@@ -395,17 +397,19 @@ export function ExperienceTests({
       <section className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <h2 className="font-heading text-xl font-medium">Tests</h2>
-          <Button
-            size="sm"
-            onClick={() => {
-              // A fresh drawer each time, from the config as it is now.
-              setDrawer((n) => n + 1);
-              setCreating(true);
-            }}
-          >
-            <FlaskConicalIcon data-icon="inline-start" />
-            New Test
-          </Button>
+          {!readOnly && (
+            <Button
+              size="sm"
+              onClick={() => {
+                // A fresh drawer each time, from the config as it is now.
+                setDrawer((n) => n + 1);
+                setCreating(true);
+              }}
+            >
+              <FlaskConicalIcon data-icon="inline-start" />
+              New Test
+            </Button>
+          )}
         </div>
 
         {tests.length === 0 ? (
@@ -462,20 +466,22 @@ export function ExperienceTests({
                       <Button variant="secondary" size="sm" onClick={() => setViewing(test.id)}>
                         View
                       </Button>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" aria-label="More" />}>
-                          <MoreHorizontalIcon />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-40">
-                          <DropdownMenuItem
-                            onClick={() =>
-                              deleter.submit({ intent: "delete-test", id: test.id }, { method: "post", encType: "application/json" })
-                            }
-                          >
-                            Delete Test
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      {!readOnly && (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" aria-label="More" />}>
+                            <MoreHorizontalIcon />
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-40">
+                            <DropdownMenuItem
+                              onClick={() =>
+                                deleter.submit({ intent: "delete-test", id: test.id }, { method: "post", encType: "application/json" })
+                              }
+                            >
+                              Delete Test
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>

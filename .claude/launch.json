@@ -13,6 +13,17 @@
       "autoPort": true
     },
     {
+      "name": "worker-preview",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "--dir",
+        "worker",
+        "preview"
+      ],
+      "port": 4173,
+      "autoPort": true
+    },
+    {
       "name": "site",
       "runtimeExecutable": "pnpm",
       "runtimeArgs": [

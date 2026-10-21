@@ -1,0 +1,45 @@
+/*
+ * Pop: flat bubblegum, yellow, lime and lilac fields with black ink and
+ * black rules, for a dating app. Bebas Neue for display (font-display),
+ * always in capitals; DM Sans for everything you read. Square corners,
+ * 2px lines, photographs in a black frame. The Date catalogue switches
+ * fields per section (date/shared.tsx `fill`).
+ */
+:root[data-theme="pop"],
+[data-theme="pop"] {
+  color-scheme: light;
+  /* Set here too, so a theme scoped inside the admin keeps its own face. */
+  --font-ui: "DM Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display-face: "Bebas Neue", "Arial Narrow", ui-sans-serif, sans-serif;
+  --radius: 0rem;
+  --ink: oklch(0.17 0.005 300);
+  --background: oklch(0.955 0.03 82);
+  --foreground: var(--ink);
+  --card: oklch(0.99 0.008 85);
+  --card-foreground: var(--ink);
+  --popover: var(--card);
+  --popover-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-foreground: oklch(0.99 0.008 85);
+  --secondary: oklch(0.92 0.04 82);
+  --secondary-foreground: var(--ink);
+  --muted: oklch(0.92 0.04 82);
+  --muted-foreground: oklch(0.17 0.005 300 / 68%);
+  --accent: oklch(0.92 0.04 82);
+  --accent-foreground: var(--ink);
+  --border: var(--ink);
+  --input: var(--ink);
+  --ring: oklch(0.17 0.005 300 / 45%);
+  /* The fields. */
+  --cream: oklch(0.955 0.03 82);
+  --pink: oklch(0.83 0.11 350);
+  --yellow: oklch(0.9 0.165 99);
+  --lime: oklch(0.89 0.16 138);
+  --lilac: oklch(0.77 0.12 302);
+  /* The heart: the one hot colour, kept for buttons that matter. */
+  --heart: oklch(0.55 0.215 18);
+  --heart-foreground: oklch(0.99 0.008 85);
+  /* The deep field: ink, for how the page was made and the footer. */
+  --deep: var(--ink);
+  --deep-foreground: oklch(0.955 0.03 82);
+}

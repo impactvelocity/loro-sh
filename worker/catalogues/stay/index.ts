@@ -83,6 +83,25 @@ export default defineCatalogue({
     artifact: { layout: artifactLayout, components: artifactComponents },
   },
   skills: staySkills,
+  // Emma's answers from the demo workspace's example run.
+  samples: [
+    {
+      id: "emma",
+      person: { name: "Emma Collins", email: "emma.collins@example.com" },
+      answers: {
+        arrive: "Friday",
+        nights: "Three",
+        party: "The two of us",
+        dog: "Juniper",
+        "dog-about": "A two-year-old lab. Swims in anything, a bit much with small dogs.",
+        after: ["Beach walks with the dog", "Coffee somewhere good", "Dinner worth booking", "Wine tasting"],
+        pace: 2,
+        favourites: "Sightglass for coffee, Zuni Café for birthdays, Smuggler's Cove in San Francisco",
+        music: "Khruangbin, Men I Trust, Fleetwood Mac",
+        "plan-around": "Saturday's our anniversary.",
+      },
+    },
+  ],
   example: {
     catalogue: "stay",
     name: "Your Stay",

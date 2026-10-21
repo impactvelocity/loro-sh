@@ -54,11 +54,16 @@
 		// other's pages across. Any other host serves everything, so local dev,
 		// workers.dev and forks work unchanged. Clear both to turn it off.
 		"APP_HOST": "app.loro.sh",
-		"PAGES_HOST": "demo.loro.sh"
+		"PAGES_HOST": "demo.loro.sh",
+		// PostHog: page views, clicks and page leaves in the admin and the
+		// experience pages, tagged product: "loro". Only APP_HOST and
+		// PAGES_HOST report, and only with the POSTHOG_KEY secret set, so a
+		// fork sends nothing until it adds its own project's key.
+		"POSTHOG_HOST": "https://us.i.posthog.com"
 	}
 
 	// Secrets, all optional; see workers/env.d.ts. Set them with
-	// `wrangler secret put`, or in .dev.vars locally. ADMIN_PASSWORD puts
-	// the admin behind a sign-in; it's a secret, not a var, so it stays out
+	// `wrangler secret put`, or in .dev.vars locally. ADMIN_PASSWORD makes
+	// the admin view only until it's unlocked; it's a secret, not a var, so it stays out
 	// of git.
 }

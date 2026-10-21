@@ -7,7 +7,7 @@ export function Hero() {
     <section id="top" className="pt-14 sm:pt-20 lg:pt-24">
       <Container>
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-end lg:gap-10">
-          <h1 className="font-display text-[2.6rem] leading-[1.02] tracking-[-0.02em] text-balance sm:text-6xl lg:col-span-8 lg:text-[4.5rem]">
+          <h1 className="font-display text-[2.6rem] leading-[1.02] tracking-normal text-balance sm:text-6xl lg:col-span-8 lg:text-[4.5rem]">
             Loro turns your customer&rsquo;s taste into an experience only your brand could send.
           </h1>
           <div className="lg:col-span-4 lg:pb-2">

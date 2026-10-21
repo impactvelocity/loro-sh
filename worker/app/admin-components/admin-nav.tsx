@@ -1,7 +1,9 @@
-import { Form, NavLink } from "react-router";
+import { NavLink } from "react-router";
 import { ExternalLinkIcon } from "lucide-react";
 
 import { Logo } from "@/admin-components/logo";
+import { ViewOnlyNote } from "@/admin-components/view-only";
+import { useReadOnly } from "@/hooks/use-read-only";
 import { cn } from "@/lib/utils";
 
 const primary = [
@@ -56,8 +58,8 @@ function NavList({
   );
 }
 
-/** `signOut` only when ADMIN_PASSWORD is set: with no password there's nothing to sign out of. */
-export function AdminNav({ onNavigate, signOut }: { onNavigate?: () => void; signOut?: boolean }) {
+export function AdminNav({ onNavigate }: { onNavigate?: () => void }) {
+  const readOnly = useReadOnly();
   return (
     <nav className="flex h-full flex-col justify-between px-10 pt-[4.5rem] pb-10">
       <div className="flex flex-col gap-5">
@@ -66,16 +68,8 @@ export function AdminNav({ onNavigate, signOut }: { onNavigate?: () => void; sig
         <NavList items={agents} onNavigate={onNavigate} />
       </div>
       <div className="flex flex-col gap-6">
-        <div className="flex flex-col gap-3">
-          <NavList items={secondary} onNavigate={onNavigate} />
-          {signOut && (
-            <Form method="post" action="/logout">
-              <button type="submit" className={cn(itemClass(false), "outline-none focus-visible:after:scale-x-100")}>
-                Sign Out
-              </button>
-            </Form>
-          )}
-        </div>
+        {readOnly && <ViewOnlyNote>Everything here is open to read. Saving, deleting and the agent need the password.</ViewOnlyNote>}
+        <NavList items={secondary} onNavigate={onNavigate} />
         <a
           href="https://loro.sh"
           target="_blank"

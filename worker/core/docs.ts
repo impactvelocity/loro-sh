@@ -121,7 +121,7 @@ const sections: DocSection[] = [
           {
             type: "code",
             label: "Terminal",
-            code: "git clone https://github.com/loro-sh/loro\ncd loro/worker\npnpm install",
+            code: "git clone https://github.com/impactvelocity/loro-sh\ncd loro-sh/worker\npnpm install",
           },
           { type: "h2", text: "Add Secrets" },
           {
@@ -131,7 +131,7 @@ const sections: DocSection[] = [
           { type: "code", label: "Terminal", code: "pnpm wrangler secret put QLOO_API_KEY" },
           {
             type: "p",
-            text: "Set an admin password, or anyone with the URL can open `/admin` and read the API. Run the same command again to change it; that signs everyone out.",
+            text: "Set an admin password, or anyone with the URL can change your workspaces and chat with the agent. With one, `/admin` opens view only: visitors can read everything in it, profiles included, but saving, adding, deleting and the agent need the password. Run the same command again to change it; that puts everyone back to view only.",
           },
           { type: "code", label: "Terminal", code: "pnpm wrangler secret put ADMIN_PASSWORD" },
           {
@@ -536,7 +536,7 @@ const sections: DocSection[] = [
           { type: "h2", text: "What's Open" },
           {
             type: "p",
-            text: "Without an admin password, reads are open, like the admin. With `ADMIN_PASSWORD` set, every route needs a key or the admin's sign-in, except what a public experience page calls: the experience and its questions, sign-up, answers, feedback and following a run. Listing and creating workspaces then needs the sign-in.",
+            text: "Without an admin password, reads are open, like the admin. With `ADMIN_PASSWORD` set, every route needs a key or a browser that has unlocked the admin, except what a public experience page calls: the experience and its questions, sign-up, answers, feedback and following a run. Listing and creating workspaces then needs the admin unlocked.",
           },
           { type: "h2", text: "Endpoints" },
           {

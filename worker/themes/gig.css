@@ -1,0 +1,89 @@
+/*
+ * Gig: a punk room on a Tuesday. Black walls, flyers pasted over flyers,
+ * a xerox gone pink. Mostly ink with a little colour: hot pink for what's
+ * theirs, orange and yellow on the odd flyer, cream for paper and type.
+ * Big Shoulders Display for the posters, its stencil cut for the name over
+ * the door, Space Mono for ticket facts, Inter for everything you read.
+ * Square corners; grain over the lot.
+ */
+:root[data-theme="gig"],
+[data-theme="gig"] {
+  color-scheme: dark;
+  /* Set here too, so a theme scoped inside the admin keeps its own face. */
+  --font-ui: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display-face: "Big Shoulders Display Variable", "Arial Narrow", sans-serif;
+  --font-logo-face: "Big Shoulders Stencil Display Variable", "Big Shoulders Display Variable", sans-serif;
+  --font-mono-face: "Space Mono", ui-monospace, monospace;
+  --radius: 0rem;
+  --background: #131013;
+  --foreground: #f2ebdd;
+  --card: #1b171b;
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --primary: #ff3e8a;
+  --primary-foreground: #151215;
+  --secondary: #221d22;
+  --secondary-foreground: var(--foreground);
+  --muted: #221d22;
+  --muted-foreground: rgb(242 235 221 / 62%);
+  --accent: #221d22;
+  --accent-foreground: var(--foreground);
+  --border: rgb(242 235 221 / 14%);
+  --input: rgb(242 235 221 / 30%);
+  --ring: rgb(255 62 138 / 60%);
+  /* Hot pink: what's theirs. Their picks, buttons, a match. */
+  --hot: #ff3e8a;
+  /* Orange and yellow: other flyers on the wall, the misprint under a button. */
+  --flare: #ff6b2b;
+  --acid: #f7d84a;
+  /* Paper and ink: tickets, stickers, the type on them. */
+  --paper: #f2ebdd;
+  --ink: #151215;
+  /* The deepest black: the footer, the back of the room. */
+  --deep: #0c0a0c;
+  /* Shared components (the run footer's bar) read the brand colour. */
+  --brand: var(--hot);
+  --brand-foreground: var(--ink);
+
+  /* Textures, drawn by SVG noise so there's nothing to download. */
+  --tex-grain: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='f'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23f)'/></svg>");
+  /* Cream specks, fine and coarse, and hairline scratches, like dust on a print. */
+  --tex-dust: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='440' height='440'><filter id='a' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='2' seed='11' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .95  0 0 0 0 .92  0 0 0 0 .86  25 0 0 0 -19.25'/></filter><filter id='b' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='.2' numOctaves='2' seed='7' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .95  0 0 0 0 .92  0 0 0 0 .86  25 0 0 0 -20.25'/></filter><filter id='s' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='.003 .5' numOctaves='2' seed='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .95  0 0 0 0 .92  0 0 0 0 .86  30 0 0 0 -23.61'/></filter><rect width='100%' height='100%' filter='url(%23a)'/><rect width='100%' height='100%' filter='url(%23b)'/><rect width='100%' height='100%' filter='url(%23s)' transform='rotate(-24 220 220)' opacity='.6'/></svg>");
+  /* Ink specks, fine and coarse, a few cream ones and scratches, for colour fields and paper. */
+  --tex-ink: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='a' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='2' seed='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .1  0 0 0 0 .07  0 0 0 0 .12  25 0 0 0 -18.25'/></filter><filter id='b' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='.2' numOctaves='2' seed='6' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .1  0 0 0 0 .07  0 0 0 0 .12  25 0 0 0 -19.75'/></filter><filter id='c' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='2' seed='9' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .97  0 0 0 0 .95  0 0 0 0 .9  25 0 0 0 -19.75'/></filter><filter id='s' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='.003 .5' numOctaves='2' seed='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .1  0 0 0 0 .07  0 0 0 0 .12  30 0 0 0 -23.7'/></filter><rect width='100%' height='100%' filter='url(%23a)'/><rect width='100%' height='100%' filter='url(%23b)'/><rect width='100%' height='100%' filter='url(%23c)'/><rect width='100%' height='100%' filter='url(%23s)' transform='rotate(-24 200 200)' opacity='.6'/></svg>");
+  /* A mask with holes knocked out, more in some patches: worn print on type and stickers. */
+  --tex-worn: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='w' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='.016' numOctaves='2' seed='2' stitchTiles='stitch'/><feColorMatrix values='1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0 1' result='lo'/><feTurbulence type='fractalNoise' baseFrequency='.6' numOctaves='3' seed='5' stitchTiles='stitch'/><feColorMatrix values='1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0 1' result='hi'/><feComposite in='hi' in2='lo' operator='arithmetic' k2='1' k3='1' k4='-.5'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -25 0 0 0 21'/></filter><rect width='100%' height='100%' filter='url(%23w)'/></svg>");
+}
+
+/* Film grain over a whole page, fixed so it doesn't scroll with it. */
+[data-theme="gig"] .gig-grain {
+  background-image: var(--tex-grain);
+  background-size: 180px;
+  mix-blend-mode: overlay;
+  opacity: 0.42;
+}
+
+[data-theme="gig"] .gig-dust {
+  background-image: var(--tex-dust);
+  background-size: 440px;
+}
+
+[data-theme="gig"] .gig-ink {
+  background-image: var(--tex-ink);
+  background-size: 400px;
+}
+
+[data-theme="gig"] .gig-worn {
+  -webkit-mask-image: var(--tex-worn);
+  mask-image: var(--tex-worn);
+  /* In ems, so the wear scales with the type: small type doesn't lose whole letters. */
+  -webkit-mask-size: clamp(240px, 2em, 440px);
+  mask-size: clamp(240px, 2em, 440px);
+}
+
+/* Print dots, laid over a duotone so it reads as a copy of a copy. */
+[data-theme="gig"] .gig-dots {
+  background-image: radial-gradient(circle, rgb(0 0 0 / 0.5) 0.8px, transparent 1.25px);
+  background-size: 4px 4px;
+}

@@ -20,6 +20,7 @@ import { Spinner } from "@/admin-components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/admin-components/ui/table";
 import { Textarea } from "@/admin-components/ui/textarea";
 import { number } from "@/lib/format";
+import { useReadOnly } from "@/hooks/use-read-only";
 import { currentWorkspace } from "@/lib/workspace.server";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
@@ -62,6 +63,7 @@ export default function SegmentPage({ loaderData }: Route.ComponentProps) {
   const navigate = useNavigate();
   const [draft, setDraft] = useState<Draft>(() => draftOf(segment));
   const fetcher = useFetcher<typeof action>();
+  const readOnly = useReadOnly();
   const saving = fetcher.state !== "idle";
   const set = <K extends keyof Draft>(key: K, value: Draft[K]) => setDraft((current) => ({ ...current, [key]: value }));
 
@@ -80,26 +82,28 @@ export default function SegmentPage({ loaderData }: Route.ComponentProps) {
         actions={
           <>
             <AskAgentLink kind="segment" id={segment.id} />
-            {dirty && (
+            {dirty && !readOnly && (
               <Button variant="ghost" size="sm" disabled={saving} onClick={() => setDraft(draftOf(segment))}>
                 Discard
               </Button>
             )}
-            <Button
-              size="sm"
-              disabled={!dirty || saving}
-              aria-busy={saving}
-              onClick={() =>
-                fetcher.submit({ intent: "save", segment: draft } as unknown as SubmitTarget, {
-                  method: "post",
-                  encType: "application/json",
-                })
-              }
-            >
-              {saving && <Spinner data-icon="inline-start" />}
-              {saved && <CheckIcon data-icon="inline-start" />}
-              {saved ? "Saved" : "Save Changes"}
-            </Button>
+            {!readOnly && (
+              <Button
+                size="sm"
+                disabled={!dirty || saving}
+                aria-busy={saving}
+                onClick={() =>
+                  fetcher.submit({ intent: "save", segment: draft } as unknown as SubmitTarget, {
+                    method: "post",
+                    encType: "application/json",
+                  })
+                }
+              >
+                {saving && <Spinner data-icon="inline-start" />}
+                {saved && <CheckIcon data-icon="inline-start" />}
+                {saved ? "Saved" : "Save Changes"}
+              </Button>
+            )}
           </>
         }
       />
@@ -219,18 +223,20 @@ export default function SegmentPage({ loaderData }: Route.ComponentProps) {
             )}
           </FormSection>
 
-          <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg border p-5">
-            <div className="flex max-w-md flex-col gap-1">
-              <span className="text-sm font-medium">Delete Segment</span>
-              <p className="text-sm text-muted-foreground">People in it stay; they're just unassigned.</p>
+          {!readOnly && (
+            <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg border p-5">
+              <div className="flex max-w-md flex-col gap-1">
+                <span className="text-sm font-medium">Delete Segment</span>
+                <p className="text-sm text-muted-foreground">People in it stay; they're just unassigned.</p>
+              </div>
+              <ConfirmDeleteButton
+                label="Delete Segment"
+                confirmTitle={`Delete ${segment.name}?`}
+                confirmDescription={`${number.format(segment.people)} ${segment.people === 1 ? "person" : "people"} will be unassigned. This can't be undone.`}
+                onConfirm={() => fetcher.submit({ intent: "delete" }, { method: "post", encType: "application/json" })}
+              />
             </div>
-            <ConfirmDeleteButton
-              label="Delete Segment"
-              confirmTitle={`Delete ${segment.name}?`}
-              confirmDescription={`${number.format(segment.people)} ${segment.people === 1 ? "person" : "people"} will be unassigned. This can't be undone.`}
-              onConfirm={() => fetcher.submit({ intent: "delete" }, { method: "post", encType: "application/json" })}
-            />
-          </div>
+          )}
         </div>
 
         <aside className="flex flex-col gap-6 lg:sticky lg:top-10 lg:self-start">

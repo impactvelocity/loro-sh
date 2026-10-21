@@ -12,6 +12,7 @@ import { Button } from "@/admin-components/ui/button";
 import { Input } from "@/admin-components/ui/input";
 import { Sheet, SheetContent, SheetTitle } from "@/admin-components/ui/sheet";
 import { Tabs, TabsList, TabsTrigger } from "@/admin-components/ui/tabs";
+import { useReadOnly } from "@/hooks/use-read-only";
 import { duration } from "@/lib/format";
 import { uploadFile } from "@/lib/upload";
 import { cn } from "@/lib/utils";
@@ -115,7 +116,8 @@ export function LibraryDrawer({
   const items = itemsOf(library, tab);
   const names = kindNames[tab];
   const title = kinds.length > 1 ? "Choose Media" : `Choose ${names.one}`;
-  const workspaceId = library.workspaceId;
+  // Uploading needs a workspace, and the admin unlocked.
+  const workspaceId = useReadOnly() ? undefined : library.workspaceId;
 
   // Start on what's picked each time it opens.
   useEffect(() => {

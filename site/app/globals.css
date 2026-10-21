@@ -24,6 +24,8 @@
   --color-accent: #8c8cc8;
   --color-accent-hover: #8081b7;
   --color-accent-soft: #e6e6f4;
+  /* The accent taken dark, for the header bar. */
+  --color-accent-deep: #22203f;
   /* Qloo's card hues, used for taste chips. */
   --color-sage: #8ca082;
   --color-mauve: #b48ca0;
@@ -59,6 +61,37 @@
   /* Cal Sans GEOM axis: 0 a11y, 50 default, 100 geometric. */
   .font-display {
     font-variation-settings: "GEOM" 40;
+  }
+}
+
+/* The home page's experience diagram: dashes flowing along the line, and a dot travelling it. */
+@keyframes dash-flow {
+  to {
+    background-position: 16px 0;
+  }
+}
+@keyframes dash-flow-y {
+  to {
+    background-position: 0 16px;
+  }
+}
+@keyframes dash-move {
+  to {
+    stroke-dashoffset: -12;
+  }
+}
+@keyframes travel {
+  0% {
+    left: 0%;
+    opacity: 0;
+  }
+  10%,
+  90% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
   }
 }
 

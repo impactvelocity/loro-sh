@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/admin-components/ui/dropdown-menu";
 import { Spinner } from "@/admin-components/ui/spinner";
+import { useReadOnly } from "@/hooks/use-read-only";
 import { cn } from "@/lib/utils";
 
 /**
@@ -33,6 +34,7 @@ export function WorkspaceSwitcher({
 }) {
   const fetcher = useFetcher();
   const navigate = useNavigate();
+  const readOnly = useReadOnly();
   const switching = fetcher.state !== "idle";
 
   return (
@@ -88,10 +90,12 @@ export function WorkspaceSwitcher({
           </DropdownMenuRadioGroup>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => navigate("/admin/workspaces?new")}>
-          <PlusIcon />
-          New Workspace
-        </DropdownMenuItem>
+        {!readOnly && (
+          <DropdownMenuItem onClick={() => navigate("/admin/workspaces?new")}>
+            <PlusIcon />
+            New Workspace
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem onClick={() => navigate("/admin/workspaces")}>
           <LayoutGridIcon />
           All Workspaces

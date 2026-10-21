@@ -13,7 +13,7 @@ pnpm install
 pnpm dev        # applies migrations, then http://localhost:5173
 pnpm db:reset   # wipe the local database and reapply the migrations
 pnpm typecheck  # wrangler types + react-router typegen + tsc
-pnpm deploy     # build and deploy to your Cloudflare account
+pnpm run deploy # build and deploy to your Cloudflare account
 ```
 
 ## Layout
@@ -32,7 +32,7 @@ themes/           Design tokens per theme, applied as data-theme on <html>
 
 ## Data
 
-All Cloudflare resources are declared in `wrangler.jsonc`. D1, KV and R2 have no IDs, so `pnpm deploy` creates them in your account; locally they live in `.wrangler/state`. Images and Stream are `remote: true`, so even local dev uploads to your real account (log in with `wrangler login`).
+All Cloudflare resources are declared in `wrangler.jsonc`. D1, KV and R2 have no IDs, so `pnpm run deploy` creates them in your account; locally they live in `.wrangler/state`. Images and Stream are `remote: true`, so even local dev uploads to your real account (log in with `wrangler login`).
 
 - **D1** (`DB`): one database for every workspace; each table's key starts with `workspace_id`. Schema in `migrations/`. A fresh database has no workspaces; create one in the admin, with demo data or without.
 - **Cloudflare Images** (`IMAGES`): uploaded images, delivered from `imagedelivery.net`.
@@ -55,7 +55,7 @@ Vars, in `wrangler.jsonc`:
 Secrets, all optional (`workers/env.d.ts`). Put them in `.dev.vars` locally and set them with `wrangler secret put` for production:
 
 - `QLOO_API_KEY`: without it, Qloo calls return nothing.
-- `ADMIN_PASSWORD`: puts the admin behind a sign-in. See [Admin sign-in](#admin-sign-in).
+- `ADMIN_PASSWORD`: makes the admin view only until it's unlocked. See [Admin password](#admin-password).
 - `CF_ACCOUNT_ID` and `CF_API_TOKEN`: query Analytics Engine (Account Analytics: Read), and let the listing step read sites that turn away a plain fetch through Browser Rendering (Browser Rendering: Edit).
 
 Images and Stream need those products enabled on the account.
@@ -119,7 +119,7 @@ Code steps live in `steps/`: a file that default-exports `defineStep({ type, nam
 `workers/api.ts` mounts the routes in `workers/api/`: workspaces, keys, analytics and activity; segments, people and outcomes; experiences (create, edit, delete, questions, analytics, people, outcomes, feedback, tests); skills and files; agent threads. The admin's Connect page lists every endpoint (`core/settings.ts`, kept in step by hand).
 
 - **Keys** (`core/api-keys.server.ts`): anything that changes a workspace needs one of its keys as `Authorization: Bearer loro_sk_…`. Keys are looked up by SHA-256 hash and also kept in full (migration 0009), so the Connect page can show one again; keys made before that can't be shown. Make them on the admin's Connect page, or over the API once you have one; `POST /api/workspaces` returns the new workspace's first key. Demo workspaces don't take keys.
-- **Open**: reads, and what the admin and public pages call from the browser (sign-up, answers after a sign-up, feedback, runs, uploads, the agent chat). With `ADMIN_PASSWORD` set, everything except the public experience routes also needs a key or the admin's sign-in cookie, and listing or creating workspaces needs the sign-in.
+- **Open**: reads, and what the admin and public pages call from the browser (sign-up, answers after a sign-up, feedback, runs, uploads, the agent chat). With `ADMIN_PASSWORD` set, everything except the public experience routes also needs a key or the admin's unlock cookie, and listing or creating workspaces needs the cookie.
 - **Errors**: core functions throw their own errors with messages fit to show; `errorResponse` in `workers/api/http.ts` turns them into `{ error }` (400), or `{ error, errors }` per field (422).
 
 ## MCP Server
@@ -143,9 +143,11 @@ Each tool is an in-process call to the REST API with the same key, so validation
 
 Outcomes use a separate model, `OUTCOME_MODEL` (`outcomeModel()`), with reasoning kept low, since the person waits on every section. Code steps get it as `ctx.model`. To use either elsewhere, call `languageModel()` or `outcomeModel()` from `core/ai.server.ts` with `generateText` or `streamText`.
 
-## Admin sign-in
+## Admin password
 
-Set the `ADMIN_PASSWORD` secret and `/admin` redirects to `/login`. Signing in sets a 30-day cookie holding an expiry and an HMAC of it, keyed by the password (`core/admin-auth.server.ts`). Nothing is stored, and changing the password signs everyone out. Unset, the admin is open. `pnpm dev` never asks, even with the password in `.dev.vars`.
+Set the `ADMIN_PASSWORD` secret and the admin is view only until it's unlocked. Anyone can open `/admin` and read it, profiles included. Every action (saving, adding, deleting, test runs) redirects to `/login` (`routes/admin/gate.tsx`), except picking a workspace or a mode, which only set the visitor's own cookie. The pages hide those buttons (`useReadOnly`), the agent chat and API key secrets, and the API routes the admin calls from the browser still need the unlock cookie. The sidebar's View Only note links to `/login`.
+
+Unlocking sets a 30-day cookie holding an expiry and an HMAC of it, keyed by the password (`core/admin-auth.server.ts`). Nothing is stored, and changing the password puts everyone back to view only. Unset, the admin is open. `pnpm dev` never asks, even with the password in `.dev.vars`.
 
 ## Domains
 

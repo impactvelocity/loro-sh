@@ -86,8 +86,8 @@ function SignupForm({
   note: string;
   className?: string;
 }) {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState(ctx.optin.initial?.name ?? "");
+  const [email, setEmail] = useState(ctx.optin.initial?.email ?? "");
   const [sent, setSent] = useState(false);
   const { pending } = ctx.optin;
   const errors = sent ? ctx.optin.errors : {};

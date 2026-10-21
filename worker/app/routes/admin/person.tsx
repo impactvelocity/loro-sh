@@ -34,6 +34,7 @@ import { Input } from "@/admin-components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/admin-components/ui/select";
 import { Spinner } from "@/admin-components/ui/spinner";
 import { Textarea } from "@/admin-components/ui/textarea";
+import { useReadOnly } from "@/hooks/use-read-only";
 import { currentWorkspace } from "@/lib/workspace.server";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
@@ -228,6 +229,7 @@ export default function PersonPage({ loaderData }: Route.ComponentProps) {
   const { person, segments, submissions, now } = loaderData;
   const [draft, setDraft] = useState<Draft>(() => draftOf(person));
   const fetcher = useFetcher<typeof action>();
+  const readOnly = useReadOnly();
   const saving = fetcher.state !== "idle";
   const set = <K extends keyof Draft>(key: K, value: Draft[K]) => setDraft((current) => ({ ...current, [key]: value }));
 
@@ -249,27 +251,29 @@ export default function PersonPage({ loaderData }: Route.ComponentProps) {
         actions={
           <>
             <AskAgentLink kind="person" id={person.id} />
-            <StartExperience name={person.name} experiences={loaderData.experiences} />
-            {dirty && (
+            {!readOnly && <StartExperience name={person.name} experiences={loaderData.experiences} />}
+            {dirty && !readOnly && (
               <Button variant="ghost" size="sm" disabled={saving} onClick={() => setDraft(draftOf(person))}>
                 Discard
               </Button>
             )}
-            <Button
-              size="sm"
-              disabled={!dirty || saving}
-              aria-busy={saving}
-              onClick={() =>
-                fetcher.submit({ intent: "save", person: draft } as unknown as SubmitTarget, {
-                  method: "post",
-                  encType: "application/json",
-                })
-              }
-            >
-              {saving && <Spinner data-icon="inline-start" />}
-              {saved && <CheckIcon data-icon="inline-start" />}
-              {saved ? "Saved" : "Save Changes"}
-            </Button>
+            {!readOnly && (
+              <Button
+                size="sm"
+                disabled={!dirty || saving}
+                aria-busy={saving}
+                onClick={() =>
+                  fetcher.submit({ intent: "save", person: draft } as unknown as SubmitTarget, {
+                    method: "post",
+                    encType: "application/json",
+                  })
+                }
+              >
+                {saving && <Spinner data-icon="inline-start" />}
+                {saved && <CheckIcon data-icon="inline-start" />}
+                {saved ? "Saved" : "Save Changes"}
+              </Button>
+            )}
           </>
         }
       />
@@ -352,18 +356,20 @@ export default function PersonPage({ loaderData }: Route.ComponentProps) {
             />
           </FormSection>
 
-          <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg border p-5">
-            <div className="flex max-w-md flex-col gap-1">
-              <span className="text-sm font-medium">Delete Profile</span>
-              <p className="text-sm text-muted-foreground">Removes them, their answers and their activity.</p>
+          {!readOnly && (
+            <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg border p-5">
+              <div className="flex max-w-md flex-col gap-1">
+                <span className="text-sm font-medium">Delete Profile</span>
+                <p className="text-sm text-muted-foreground">Removes them, their answers and their activity.</p>
+              </div>
+              <ConfirmDeleteButton
+                label="Delete Profile"
+                confirmTitle={`Delete ${person.name}?`}
+                confirmDescription="Their intake answers and taste signals go too. This can't be undone."
+                onConfirm={() => fetcher.submit({ intent: "delete" }, { method: "post", encType: "application/json" })}
+              />
             </div>
-            <ConfirmDeleteButton
-              label="Delete Profile"
-              confirmTitle={`Delete ${person.name}?`}
-              confirmDescription="Their intake answers and taste signals go too. This can't be undone."
-              onConfirm={() => fetcher.submit({ intent: "delete" }, { method: "post", encType: "application/json" })}
-            />
-          </div>
+          )}
         </div>
 
         <aside className="flex flex-col gap-8">

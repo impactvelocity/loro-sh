@@ -19,6 +19,7 @@ import type { ImageAsset } from "@core/context";
 import { listFiles } from "@core/files.server";
 import { TAGLINE_MAX, type Workspace as WorkspaceData } from "@core/workspaces";
 import { WorkspaceError, deleteWorkspace, updateWorkspace } from "@core/workspaces.server";
+import { useReadOnly } from "@/hooks/use-read-only";
 import { type Mode, isMode, readPreferences, savePreferences } from "@/lib/preferences";
 import { currentWorkspace } from "@/lib/workspace.server";
 import { cn } from "@/lib/utils";
@@ -88,8 +89,11 @@ export async function action({ request }: Route.ActionArgs) {
 
 /* Workspace */
 
-function Workspace({ name, tagline, locked }: { name: string; tagline: string; locked: boolean }) {
+function Workspace({ name, tagline, demo }: { name: string; tagline: string; demo: boolean }) {
   const fetcher = useFetcher<typeof action>();
+  // View only, the fields lock as a demo's do.
+  const readOnly = useReadOnly();
+  const locked = demo || readOnly;
   const [value, setValue] = useState(name);
   const [line, setLine] = useState(tagline);
   const saving = fetcher.state !== "idle";
@@ -111,7 +115,7 @@ function Workspace({ name, tagline, locked }: { name: string; tagline: string; l
           aria-invalid={error ? true : undefined}
         />
         <FieldDescription>
-          {error ?? (locked ? "Demo workspaces keep their names." : "Shown at the top of the sidebar.")}
+          {error ?? (demo ? "Demo workspaces keep their names." : "Shown at the top of the sidebar.")}
         </FieldDescription>
       </Field>
       <Field>
@@ -153,7 +157,8 @@ function Workspace({ name, tagline, locked }: { name: string; tagline: string; l
 function Cover({ workspace, covers }: { workspace: WorkspaceData; covers: ImageAsset[] }) {
   const fetcher = useFetcher<typeof action>();
   const [open, setOpen] = useState(false);
-  const locked = Boolean(workspace.demo);
+  const readOnly = useReadOnly();
+  const locked = Boolean(workspace.demo) || readOnly;
   // Show the new choice straight away, before the round trip finishes.
   const pending = fetcher.formData?.get("cover");
   const current = pending === undefined || pending === null ? workspace.cover : String(pending) || null;
@@ -193,7 +198,7 @@ function Cover({ workspace, covers }: { workspace: WorkspaceData; covers: ImageA
       <div className="flex items-center justify-between gap-4">
         <FieldDescription>
           {fetcher.data?.error ??
-            (locked ? "Demo workspaces keep their covers." : "From the images in Context. Shown on the Workspaces page.")}
+            (workspace.demo ? "Demo workspaces keep their covers." : "From the images in Context. Shown on the Workspaces page.")}
         </FieldDescription>
         {current && !locked && (
           <Button variant="ghost" size="sm" className="-mr-3 shrink-0" onClick={() => pick("")}>
@@ -298,6 +303,7 @@ function DeleteWorkspace({ name }: { name: string }) {
 
 export default function Settings({ loaderData }: Route.ComponentProps) {
   const { preferences, workspace, covers, ai } = loaderData;
+  const readOnly = useReadOnly();
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-10">
@@ -309,7 +315,7 @@ export default function Settings({ loaderData }: Route.ComponentProps) {
             key={workspace.id + workspace.name + workspace.tagline}
             name={workspace.name}
             tagline={workspace.tagline}
-            locked={Boolean(workspace.demo)}
+            demo={Boolean(workspace.demo)}
           />
           <Cover key={workspace.id} workspace={workspace} covers={covers} />
         </FormSection>
@@ -389,7 +395,7 @@ export default function Settings({ loaderData }: Route.ComponentProps) {
           </ul>
         </FormSection>
 
-        {!workspace.demo && (
+        {!workspace.demo && !readOnly && (
           <FormSection title="Delete Workspace">
             <DeleteWorkspace name={workspace.name} />
           </FormSection>

@@ -92,7 +92,7 @@ export const api = new Hono<ApiEnv>()
   })
 
   .get("/workspaces", requireAdmin, async (c) => c.json({ workspaces: await listWorkspaces() }))
-  // Open, like the admin's New Workspace (signed in, with ADMIN_PASSWORD set).
+  // Open, like the admin's New Workspace (unlocked, with ADMIN_PASSWORD set).
   // Returns its first API key.
   .post("/workspaces", requireAdmin, async (c) => {
     const input = await readJson(c, workspaceInput);

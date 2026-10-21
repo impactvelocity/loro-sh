@@ -38,6 +38,7 @@ import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/admin-compone
 import { Input } from "@/admin-components/ui/input";
 import { Spinner } from "@/admin-components/ui/spinner";
 import { Tabs, TabsList, TabsTrigger } from "@/admin-components/ui/tabs";
+import { useReadOnly } from "@/hooks/use-read-only";
 import { cn } from "@/lib/utils";
 import { currentWorkspace } from "@/lib/workspace.server";
 
@@ -122,7 +123,7 @@ function draftOf(funnel: Route.ComponentProps["loaderData"]["funnel"]): Draft {
   return { name: funnel.name, slug: funnel.slug, status: funnel.status, config: funnel.config as ExperienceConfig };
 }
 
-/** Save and Discard for one area of the page. */
+/** Save and Discard for one area of the page. View only, just Discard. */
 function SaveButtons({
   dirty,
   saving,
@@ -139,6 +140,7 @@ function SaveButtons({
   onSave: () => void;
   onDiscard: () => void;
 }) {
+  const readOnly = useReadOnly();
   return (
     <div className="flex items-center gap-2">
       {dirty && (
@@ -146,11 +148,13 @@ function SaveButtons({
           Discard
         </Button>
       )}
-      <Button size="sm" disabled={!dirty || saving} aria-busy={saving} onClick={onSave}>
-        {saving && <Spinner data-icon="inline-start" />}
-        {saved && !dirty && <CheckIcon data-icon="inline-start" />}
-        {saved && !dirty ? "Saved" : label}
-      </Button>
+      {!readOnly && (
+        <Button size="sm" disabled={!dirty || saving} aria-busy={saving} onClick={onSave}>
+          {saving && <Spinner data-icon="inline-start" />}
+          {saved && !dirty && <CheckIcon data-icon="inline-start" />}
+          {saved && !dirty ? "Saved" : label}
+        </Button>
+      )}
     </div>
   );
 }
@@ -167,6 +171,7 @@ function Settings({
   actions: React.ReactNode;
   onDelete: () => void;
 }) {
+  const readOnly = useReadOnly();
   return (
     <div className="flex max-w-3xl flex-col gap-10">
       <FormSection title="General">
@@ -206,18 +211,20 @@ function Settings({
 
       <div className="flex justify-end border-t pt-6">{actions}</div>
 
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg border p-5">
-        <div className="flex max-w-md flex-col gap-1">
-          <span className="text-sm font-medium">Delete Experience</span>
-          <p className="text-sm text-muted-foreground">The link stops working. People and their profiles stay.</p>
+      {!readOnly && (
+        <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg border p-5">
+          <div className="flex max-w-md flex-col gap-1">
+            <span className="text-sm font-medium">Delete Experience</span>
+            <p className="text-sm text-muted-foreground">The link stops working. People and their profiles stay.</p>
+          </div>
+          <ConfirmDeleteButton
+            label="Delete Experience"
+            confirmTitle={`Delete ${draft.name}?`}
+            confirmDescription="This can't be undone."
+            onConfirm={onDelete}
+          />
         </div>
-        <ConfirmDeleteButton
-          label="Delete Experience"
-          confirmTitle={`Delete ${draft.name}?`}
-          confirmDescription="This can't be undone."
-          onConfirm={onDelete}
-        />
-      </div>
+      )}
     </div>
   );
 }
@@ -229,6 +236,7 @@ export default function ExperiencePage({ loaderData }: Route.ComponentProps) {
   const [tab, setTab] = useState<Tab>("overview");
   const [feedbackView, setFeedbackView] = useState<"responses" | "settings">("responses");
   const fetcher = useFetcher<typeof action>();
+  const readOnly = useReadOnly();
   const saving = fetcher.state !== "idle";
   // Which area saved last, so only its button shows the tick.
   const [savedFrom, setSavedFrom] = useState<Area | null>(null);
@@ -435,7 +443,7 @@ export default function ExperiencePage({ loaderData }: Route.ComponentProps) {
       >
         <div className="pointer-events-auto flex items-center gap-6 rounded-full bg-background py-2 pr-2 pl-5 shadow-[0_8px_40px_rgb(0_0_0/0.16)] ring-1 ring-border">
           <span className={cn("text-sm", error ? "text-destructive" : "text-muted-foreground")}>
-            {error ?? "Unsaved changes"}
+            {error ?? (readOnly ? "View only, so these edits won't save" : "Unsaved changes")}
           </span>
           {buttons("parts")}
         </div>

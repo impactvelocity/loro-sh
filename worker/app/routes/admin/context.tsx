@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { useFetcher, useRevalidator, useSearchParams } from "react-router";
+import { Link, useFetcher, useRevalidator, useSearchParams } from "react-router";
 import {
   AudioLinesIcon,
   FilmIcon,
   ImageIcon,
+  LockIcon,
   PlusIcon,
   SparklesIcon,
   UploadIcon,
@@ -21,7 +22,8 @@ import { deleteSkill, listContextFiles, listSkills, saveSkill } from "@core/cont
 import { deleteFile, updateFile } from "@core/files.server";
 import { ConfirmDeleteButton } from "@/admin-components/confirm-delete";
 import { PageHeader } from "@/admin-components/page-header";
-import { Button } from "@/admin-components/ui/button";
+import { useUnlockHref } from "@/admin-components/view-only";
+import { Button, buttonVariants } from "@/admin-components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -33,6 +35,7 @@ import {
 } from "@/admin-components/ui/dialog";
 import {
   Empty,
+  EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
@@ -66,6 +69,7 @@ import {
 } from "@/admin-components/ui/sheet";
 import { Tabs, TabsList, TabsTrigger } from "@/admin-components/ui/tabs";
 import { Textarea } from "@/admin-components/ui/textarea";
+import { useReadOnly } from "@/hooks/use-read-only";
 import { daysAgo, duration, fileSize } from "@/lib/format";
 import { uploadFile } from "@/lib/upload";
 import { currentWorkspace } from "@/lib/workspace.server";
@@ -197,6 +201,26 @@ function Dropzone({
   );
 }
 
+/** Images or Media with nothing uploaded, view only: no drop zone, so say what goes here and how to add some. */
+function NothingUploaded({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) {
+  const unlockHref = useUnlockHref();
+  return (
+    <Empty className="border">
+      <EmptyHeader>
+        <EmptyMedia variant="icon">{icon}</EmptyMedia>
+        <EmptyTitle>{title}</EmptyTitle>
+        <EmptyDescription>{children}</EmptyDescription>
+      </EmptyHeader>
+      <EmptyContent>
+        <Link to={unlockHref} className={buttonVariants({ variant: "secondary", size: "sm" })}>
+          <LockIcon data-icon="inline-start" />
+          Unlock to Upload
+        </Link>
+      </EmptyContent>
+    </Empty>
+  );
+}
+
 function NothingFound({ children }: { children: React.ReactNode }) {
   return <p className="py-10 text-center text-sm text-muted-foreground">{children}</p>;
 }
@@ -214,6 +238,7 @@ function SkillForm({
 }) {
   const [title, setTitle] = useState(skill?.title ?? "");
   const [description, setDescription] = useState(skill?.description ?? "");
+  const readOnly = useReadOnly();
 
   return (
     <form
@@ -255,7 +280,7 @@ function SkillForm({
         </FieldGroup>
       </div>
       <SheetFooter className="flex-row items-center justify-between">
-        {skill ? (
+        {skill && !readOnly ? (
           <ConfirmDeleteButton
             label="Delete Skill"
             confirmTitle="Delete this skill?"
@@ -271,10 +296,12 @@ function SkillForm({
           <span />
         )}
         <div className="flex gap-3">
-          <SheetClose render={<Button variant="ghost" size="sm" />}>Cancel</SheetClose>
-          <Button type="submit" size="sm" disabled={!title.trim() || !description.trim()}>
-            {skill ? "Save Changes" : "Add Skill"}
-          </Button>
+          <SheetClose render={<Button variant="ghost" size="sm" />}>{readOnly ? "Close" : "Cancel"}</SheetClose>
+          {!readOnly && (
+            <Button type="submit" size="sm" disabled={!title.trim() || !description.trim()}>
+              {skill ? "Save Changes" : "Add Skill"}
+            </Button>
+          )}
         </div>
       </SheetFooter>
     </form>
@@ -346,6 +373,7 @@ function ImageForm({
 }) {
   const [name, setName] = useState(image.name);
   const [alt, setAlt] = useState(image.alt);
+  const readOnly = useReadOnly();
 
   return (
     <form
@@ -384,22 +412,28 @@ function ImageForm({
         </Field>
       </FieldGroup>
       <DialogFooter className="sm:justify-between">
-        <ConfirmDeleteButton
-          label="Delete Image"
-          confirmTitle="Delete this image?"
-          confirmDescription={
-            <>
-              <strong>{image.name}</strong> will be removed from Context and from any experience
-              that shows it.
-            </>
-          }
-          onConfirm={onDelete}
-        />
+        {readOnly ? (
+          <span />
+        ) : (
+          <ConfirmDeleteButton
+            label="Delete Image"
+            confirmTitle="Delete this image?"
+            confirmDescription={
+              <>
+                <strong>{image.name}</strong> will be removed from Context and from any experience
+                that shows it.
+              </>
+            }
+            onConfirm={onDelete}
+          />
+        )}
         <div className="flex flex-col-reverse gap-3 sm:flex-row">
-          <DialogClose render={<Button variant="ghost" size="sm" />}>Cancel</DialogClose>
-          <Button type="submit" size="sm" disabled={!name.trim()}>
-            Save Changes
-          </Button>
+          <DialogClose render={<Button variant="ghost" size="sm" />}>{readOnly ? "Close" : "Cancel"}</DialogClose>
+          {!readOnly && (
+            <Button type="submit" size="sm" disabled={!name.trim()}>
+              Save Changes
+            </Button>
+          )}
         </div>
       </DialogFooter>
     </form>
@@ -419,15 +453,25 @@ function Images({
   onFiles: (files: File[]) => void;
   onOpen: (image: ImageAsset) => void;
 }) {
+  const readOnly = useReadOnly();
+  if (readOnly && images.length === 0) {
+    return (
+      <NothingUploaded icon={<ImageIcon />} title="No Images Yet">
+        Photos uploaded here can go in any image field on an experience's start page, questions or outcome.
+      </NothingUploaded>
+    );
+  }
   return (
     <div className="flex flex-col gap-8">
-      <Dropzone
-        accepts={(file) => file.type.startsWith("image/")}
-        title="Drop images here, or click to browse"
-        hint="JPG, PNG, WebP or GIF, up to 10 MB"
-        onBrowse={onBrowse}
-        onFiles={onFiles}
-      />
+      {!readOnly && (
+        <Dropzone
+          accepts={(file) => file.type.startsWith("image/")}
+          title="Drop images here, or click to browse"
+          hint="JPG, PNG, WebP or GIF, up to 10 MB"
+          onBrowse={onBrowse}
+          onFiles={onFiles}
+        />
+      )}
       <UploadList uploads={uploads} />
       {images.length > 0 && (
         <ul className="grid grid-cols-2 gap-x-5 gap-y-8 sm:grid-cols-3 lg:grid-cols-4">
@@ -476,6 +520,7 @@ function MediaForm({
   onDelete: () => void;
 }) {
   const [name, setName] = useState(item.name);
+  const readOnly = useReadOnly();
   const label = mediaKinds[item.kind];
 
   return (
@@ -521,22 +566,28 @@ function MediaForm({
         <Input id="media-name" value={name} onChange={(event) => setName(event.target.value)} />
       </Field>
       <DialogFooter className="sm:justify-between">
-        <ConfirmDeleteButton
-          label={`Delete ${label}`}
-          confirmTitle={`Delete this ${label.toLowerCase()}?`}
-          confirmDescription={
-            <>
-              <strong>{item.name}</strong> will be removed from Context and from any experience
-              that plays it.
-            </>
-          }
-          onConfirm={onDelete}
-        />
+        {readOnly ? (
+          <span />
+        ) : (
+          <ConfirmDeleteButton
+            label={`Delete ${label}`}
+            confirmTitle={`Delete this ${label.toLowerCase()}?`}
+            confirmDescription={
+              <>
+                <strong>{item.name}</strong> will be removed from Context and from any experience
+                that plays it.
+              </>
+            }
+            onConfirm={onDelete}
+          />
+        )}
         <div className="flex flex-col-reverse gap-3 sm:flex-row">
-          <DialogClose render={<Button variant="ghost" size="sm" />}>Cancel</DialogClose>
-          <Button type="submit" size="sm" disabled={!name.trim()}>
-            Save Changes
-          </Button>
+          <DialogClose render={<Button variant="ghost" size="sm" />}>{readOnly ? "Close" : "Cancel"}</DialogClose>
+          {!readOnly && (
+            <Button type="submit" size="sm" disabled={!name.trim()}>
+              Save Changes
+            </Button>
+          )}
         </div>
       </DialogFooter>
     </form>
@@ -558,19 +609,29 @@ function Media({
   onFiles: (files: File[]) => void;
   onOpen: (item: MediaAsset) => void;
 }) {
+  const readOnly = useReadOnly();
   const rows = media.filter(
     (item) => kind === "all" || item.kind === kind,
   );
+  if (readOnly && media.length === 0) {
+    return (
+      <NothingUploaded icon={<FilmIcon />} title="No Media Yet">
+        Video and audio uploaded here can go in any media field on an experience's start page, questions or outcome.
+      </NothingUploaded>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-8">
-      <Dropzone
-        accepts={(file) => file.type.startsWith("video/") || file.type.startsWith("audio/")}
-        title="Drop video or audio here, or click to browse"
-        hint="Video up to 200 MB, audio up to 50 MB"
-        onBrowse={onBrowse}
-        onFiles={onFiles}
-      />
+      {!readOnly && (
+        <Dropzone
+          accepts={(file) => file.type.startsWith("video/") || file.type.startsWith("audio/")}
+          title="Drop video or audio here, or click to browse"
+          hint="Video up to 200 MB, audio up to 50 MB"
+          onBrowse={onBrowse}
+          onFiles={onFiles}
+        />
+      )}
       <UploadList uploads={uploads} />
       {media.length > 0 && rows.length === 0 && <NothingFound>No media matches.</NothingFound>}
       {rows.length > 0 && (
@@ -652,8 +713,10 @@ export default function Context({ loaderData }: Route.ComponentProps) {
   const [kind, setKind] = useState<MediaKind | "all">("all");
   const fetcher = useFetcher();
   const revalidator = useRevalidator();
+  const readOnly = useReadOnly();
   const save = (fields: Record<string, string>) => {
-    fetcher.submit(fields, { method: "post" });
+    // Enter still submits the forms; view only, it just closes them.
+    if (!readOnly) fetcher.submit(fields, { method: "post" });
     setOpen(false);
   };
 
@@ -727,7 +790,7 @@ export default function Context({ loaderData }: Route.ComponentProps) {
         title="Context"
         docs={contextDocs[view]}
         // description="What Loro knows about your brand. Every experience draws on it, alongside each person's profile and Qloo."
-        actions={action}
+        actions={!readOnly && action}
       />
 
       <div className="flex flex-col gap-6">
@@ -755,7 +818,7 @@ export default function Context({ loaderData }: Route.ComponentProps) {
           </TabsList>
         </Tabs>
 
-        {view === "media" && (
+        {view === "media" && media.length > 0 && (
           <div className="flex">
             <Select
               items={kindFilter}

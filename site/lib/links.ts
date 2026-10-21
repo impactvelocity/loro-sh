@@ -4,16 +4,25 @@
  * exist in the production D1 for its link to work.
  */
 export const links = {
-  demo: "https://demo.loro.sh/f/mirage-valley/road-trip",
-  app: "https://app.loro.sh",
-  // Set once the repo is public; buttons that need it hide while it's empty.
-  repo: "",
+  // ?demo opens the admin straight in the Demo Experiences workspace, view only.
+  demo: "https://app.loro.sh/admin?demo=1",
+  app: "https://app.loro.sh/admin?demo=1",
+  // Buttons that need it hide while it's empty.
+  repo: "https://github.com/impactvelocity/loro-sh",
   examples: {
-    roadtrip: "https://demo.loro.sh/f/mirage-valley/road-trip",
-    stay: "https://demo.loro.sh/f/low-tide-house/plan-your-stay",
-    property: "https://demo.loro.sh/f/harbour-grey/2-3768-west-2nd-avenue",
+    roadtrip: "https://demo.loro.sh/f/demo-experiences/mirage-valley-road-trip",
+    stay: "https://demo.loro.sh/f/demo-experiences/plan-your-stay",
+    property: "https://demo.loro.sh/f/demo-experiences/2-3768-west-2nd-avenue",
   },
   qloo: "https://www.qloo.com",
+  hackathon: "https://qloo.devpost.com/",
+  // The demo video file (an .mp4 URL). Until it's set, the video frame shows a poster.
+  video: "",
+  creator: {
+    site: "https://hidylanjones.com",
+    twitter: "https://twitter.com/hidylanjones",
+    linkedin: "https://www.linkedin.com/in/hidylanjones",
+  },
 };
 
 /** Cloudflare's deploy button URL for the repo, or null until the repo is set. */

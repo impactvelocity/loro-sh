@@ -1,153 +1,174 @@
 /**
- * The Date catalogue's look, after Squarespace's Fayette: one deep wine
- * field, light high-contrast serif for the big moments (the hero, section
- * headings, the questions, the times on the plan), Inter set light and
- * tight for everything you read. Cream buttons with dark type, square
- * corners, photographs full bleed under a wine wash, hairlines instead of
- * cards. Sentence case, no pre-titles, no numbered steps.
+ * The Date catalogue's look: a dating app's, loud and flat. Bubblegum,
+ * yellow, lime and lilac fields, black 2px rules around everything,
+ * square corners, photographs in a black frame. Bebas Neue in capitals
+ * for the big moments only (the hero, section headings, the questions,
+ * the times on the plan); DM Sans for everything you read. Sentence case
+ * in the copy, no pre-titles, no numbered steps.
  *
- * Colours come from the velvet theme's tokens (--wine, --deep, --blush,
- * --cream), so another theme can repaint it. Blush always means the person
- * they're taking out; cream means the one planning. Sections switch
- * between the wine and cream with the `light` and `dark` scopes, which
- * reset the tokens components read, so every component works on both.
+ * Colours come from the pop theme's tokens (--ink, --pink, --yellow,
+ * --lime, --lilac, --cream, --heart), so another theme can repaint it.
+ * Pink always means the person they're taking out; lime means the one
+ * planning. Sections pick a field with `fill`, which resets the tokens
+ * components read, so every component works on all of them.
  */
-
-/** A cream section: wine type, wine buttons, a deeper blush. */
-export const light = {
-  "--background": "var(--cream)",
-  "--foreground": "var(--cream-foreground)",
-  "--border": "oklch(0.28 0.1 27 / 14%)",
-  "--input": "oklch(0.28 0.1 27 / 28%)",
-  "--muted-foreground": "oklch(0.28 0.1 27 / 66%)",
-  // On cream, their colour is the wine: a brighter red reads as an error.
-  "--blush": "var(--wine)",
-  "--button": "var(--wine)",
-  "--button-foreground": "var(--wine-foreground)",
-  // Shared components (the run footer's bar) read the brand colour.
-  "--brand": "var(--wine)",
-  "--brand-foreground": "var(--wine-foreground)",
-  background: "var(--background)",
-  color: "var(--foreground)",
-} as CSSProperties;
-
-/** A wine section inside a cream page. */
-export const dark = {
-  "--background": "var(--wine)",
-  "--foreground": "var(--wine-foreground)",
-  "--border": "oklch(0.97 0.012 75 / 16%)",
-  "--input": "oklch(0.97 0.012 75 / 32%)",
-  "--muted-foreground": "oklch(0.97 0.012 75 / 68%)",
-  "--blush": "var(--blush-light)",
-  "--button": "var(--cream)",
-  "--button-foreground": "var(--cream-foreground)",
-  "--brand": "var(--cream)",
-  "--brand-foreground": "var(--cream-foreground)",
-  background: "var(--background)",
-  color: "var(--foreground)",
-} as CSSProperties;
-
-/** For a section's tone field. */
-export const toneStyle = (tone: string) => (tone === "light" ? light : tone === "dark" ? dark : undefined);
 import type { ComponentType, CSSProperties, ReactNode } from "react";
 
 import type { AnyDefinition } from "@core/catalogue/define";
 import { cn } from "@/lib/utils";
 
-/** Display type: the serif, light. Size it where it's used. */
-export const display = "font-display font-normal tracking-[-0.01em] leading-[1.02]";
+export type Field = "cream" | "card" | "pink" | "yellow" | "lime" | "lilac" | "ink";
+
+/** A section's colour: the field, black type and rules, black buttons. Ink turns it over. */
+export function fill(field: Field): CSSProperties {
+  if (field === "ink")
+    return {
+      "--background": "var(--ink)",
+      "--foreground": "var(--cream)",
+      "--muted-foreground": "oklch(0.955 0.03 82 / 66%)",
+      "--border": "oklch(0.955 0.03 82 / 28%)",
+      "--input": "var(--cream)",
+      "--button": "var(--cream)",
+      "--button-foreground": "var(--ink)",
+      "--brand": "var(--cream)",
+      "--brand-foreground": "var(--ink)",
+      "--theirs": "var(--pink)",
+      background: "var(--background)",
+      color: "var(--foreground)",
+    } as CSSProperties;
+  return {
+    "--background": `var(--${field})`,
+    "--foreground": "var(--ink)",
+    "--muted-foreground": "oklch(0.17 0.005 300 / 68%)",
+    "--border": "var(--ink)",
+    "--input": "var(--ink)",
+    "--button": "var(--ink)",
+    "--button-foreground": "var(--cream)",
+    // Shared components (the run footer's bar) read the brand colour.
+    "--brand": "var(--ink)",
+    "--brand-foreground": "var(--cream)",
+    // Their colour, as a highlighter: on the pink it has to be something else.
+    "--theirs": field === "pink" ? "var(--card)" : "var(--pink)",
+    background: "var(--background)",
+    color: "var(--foreground)",
+  } as CSSProperties;
+}
+
+/** For a section's background field. Older pages say "light" (now cream) or "wine" (now pink). */
+export const toneStyle = (tone: string) => fill(tone === "light" ? "cream" : tone === "wine" ? "pink" : (tone as Field));
+
+/** The fields a start page section can sit on. */
+export const toneOptions = [
+  { value: "cream", label: "Cream" },
+  { value: "pink", label: "Pink" },
+  { value: "yellow", label: "Yellow" },
+  { value: "lime", label: "Lime" },
+  { value: "lilac", label: "Lilac" },
+];
+
+/**
+ * Display type: Bebas, in capitals. Size it where it's used. The line
+ * height is an arbitrary property, since cn() drops a leading-* when a
+ * text-[…] size follows it; set another with [line-height:…].
+ */
+export const display = "font-display font-normal uppercase tracking-[0.01em] [line-height:0.88]";
 
 /** On a layout: every h2 inside takes the display face, Basic components included. */
-export const displayHeadings = "[&_h2]:font-display [&_h2]:font-normal [&_h2]:tracking-[-0.01em] [&_h2]:leading-[1.04]";
+export const displayHeadings = "[&_h2]:font-display [&_h2]:font-normal [&_h2]:uppercase [&_h2]:tracking-[0.01em] [&_h2]:[line-height:0.9]";
 
-/** Reading text: Inter, light and a little tight, like Fayette's. */
-export const body = "font-light tracking-[-0.015em]";
+/** Reading text: DM Sans, a touch tight. */
+export const body = "tracking-[-0.01em]";
 
 /** Supporting text: a walk time, a caption, a source. */
-export const quiet = "text-sm font-light text-muted-foreground";
+export const quiet = "text-sm text-muted-foreground";
 
 /** The page's width: wide, with room at the edges. */
 export const wrap = "mx-auto w-full max-w-[88rem] px-5 @3xl:px-10 @6xl:px-16";
 
-/** Fayette's button: square, small type. Cream on the wine, wine on the cream. */
+/** A photograph in its black frame. */
+export const framed = "border-2 border-[var(--ink)] bg-[var(--card)] object-cover";
+
+/** The black rule: around blocks, under headers, between cells. */
+export const rule = "border-[var(--ink)]";
+
+/** A chunky square button with a black outline: black on the fields, cream on the ink. It lifts on hover. */
 export const button = cn(
-  "inline-flex h-12 items-center justify-center gap-2 rounded-(--radius) px-7 text-[0.9rem] font-normal tracking-[0.01em] transition-[opacity,transform] outline-none",
+  "inline-flex h-12 items-center justify-center gap-2 border-2 border-[var(--ink)] px-6 text-[0.95rem] font-semibold tracking-[-0.01em] transition-[transform,box-shadow,opacity] outline-none",
   "bg-[var(--button)] text-[var(--button-foreground)]",
-  "hover:opacity-90 active:scale-[0.99] focus-visible:ring-2 focus-visible:ring-[var(--button)] focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-60",
+  "hover:-translate-y-0.5 hover:shadow-[0_3px_0_var(--ink)] active:translate-y-0 active:shadow-none focus-visible:ring-2 focus-visible:ring-[var(--ink)] focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-60",
 );
 
-/** A quieter button: a cream outline. */
+/** The heart: the one hot button on a page, for the action that matters. Add it to `button`. */
+export const heart = "[--button:var(--heart)] [--button-foreground:var(--heart-foreground)]";
+
+/** A quieter button: the outline only. */
 export const ghost = cn(
-  "inline-flex h-12 items-center justify-center gap-2 rounded-(--radius) px-7 text-[0.9rem] font-normal ring-1 ring-current/35 transition-colors outline-none",
-  "hover:bg-current/8 focus-visible:ring-2 focus-visible:ring-ring",
+  "inline-flex h-12 items-center justify-center gap-2 border-2 border-current px-6 text-[0.95rem] font-semibold transition-colors outline-none",
+  "hover:bg-current/10 focus-visible:ring-2 focus-visible:ring-ring",
 );
 
-/** A text field on the wine: an underline in cream. */
+/** A text field as a thick underline. */
 export const line = cn(
-  "w-full border-0 border-b border-foreground/35 bg-transparent px-0 font-light tracking-[-0.015em] outline-none transition-colors",
-  "placeholder:text-foreground/45 focus:border-foreground aria-invalid:border-[var(--blush)]",
+  "w-full border-0 border-b-2 border-[var(--input)] bg-transparent px-0 outline-none transition-colors",
+  "placeholder:text-foreground/40 focus:border-b-[var(--heart)] aria-invalid:border-b-[var(--heart)]",
 );
 
-/** A small boxed field, for forms on a photo. */
+/** A boxed field, white with a black outline. */
 export const field = cn(
-  "h-12 w-full rounded-(--radius) border border-foreground/35 bg-black/10 px-4 text-base font-light outline-none transition-colors backdrop-blur-sm",
-  "placeholder:text-foreground/55 focus-visible:border-foreground aria-invalid:border-[var(--blush)]",
+  "h-12 w-full border-2 border-[var(--ink)] bg-[var(--card)] px-4 text-base text-[var(--ink)] outline-none transition-shadow",
+  "placeholder:text-[var(--ink)]/45 focus-visible:shadow-[0_3px_0_var(--ink)] aria-invalid:border-[var(--heart)]",
 );
 
-/** "Overlap" in the serif, like Fayette's wordmark. Or their own logo. */
+/** Their favourites, picked out like a highlighter. */
+export const theirs = "bg-[var(--theirs)] px-1 text-[var(--ink)] [box-decoration-break:clone]";
+
+/** "Overlap" in Bebas, like a sticker. Or their own logo. */
 export function Logo({ brand, logo, className }: { brand: string; logo?: string; className?: string }) {
   if (logo) return <img src={logo} alt={brand} className="h-8 w-auto max-w-44 object-contain" />;
-  return <span className={cn("font-display leading-none tracking-[-0.01em]", className)}>{brand}</span>;
+  return <span className={cn("font-display leading-none tracking-[0.01em] uppercase", className)}>{brand}</span>;
 }
 
-/** A section's opening: the label small on the left, the heading big on the right, like Fayette's location row. */
+/** A section's opening: the label small on the left, the heading big on the right. */
 export function SectionHead({ label, title, aside, className }: { label?: string; title: ReactNode; aside?: ReactNode; className?: string }) {
   return (
     <div className={cn("grid gap-x-10 gap-y-5 @4xl:grid-cols-12 @4xl:items-baseline", className)}>
       {/* Beside the heading only: stacked above it, it would read as a pre-title. */}
-      {label && <p className={cn(body, "text-[0.95rem] opacity-80 @max-4xl:hidden @4xl:col-span-3")}>{label}</p>}
-      <h2 className={cn(display, "text-[clamp(2.75rem,6.5cqi,5.75rem)] text-balance", label ? "@4xl:col-span-9" : "@4xl:col-span-8")}>{title}</h2>
+      {label && <p className="text-[0.95rem] font-medium opacity-80 @max-4xl:hidden @4xl:col-span-3">{label}</p>}
+      <h2 className={cn(display, "text-[clamp(3.25rem,8cqi,7.5rem)] text-balance", label ? "@4xl:col-span-9" : "@4xl:col-span-8")}>{title}</h2>
       {aside && <div className={cn("@4xl:col-span-6", label ? "@4xl:col-start-4" : "")}>{aside}</div>}
     </div>
   );
 }
 
-/** A small rounded label: blush for their taste, cream for yours, plain for the rest. */
+/**
+ * An outcome section as a block of colour in a black outline. Full width
+ * on a phone (rules top and bottom), boxed from @3xl.
+ */
+export function Block({ field: tone, id, className, children }: { field: Field; id?: string; className?: string; children: ReactNode }) {
+  return (
+    <section
+      id={id}
+      style={fill(tone)}
+      className={cn("-mx-5 scroll-mt-24 border-y-2 px-5 py-12 @3xl:mx-0 @3xl:border-2 @3xl:px-12 @3xl:py-14", rule, className)}
+    >
+      {children}
+    </section>
+  );
+}
+
+/** A small round sticker: pink for their taste, lime for yours, white for the rest. */
 export function Chip({ children, tone = "plain" }: { children: ReactNode; tone?: "plain" | "theirs" | "yours" }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs leading-none font-normal",
-        tone === "theirs" && "bg-[var(--blush)]/18 text-[var(--blush)] ring-1 ring-[var(--blush)]/35",
-        tone === "yours" && "bg-foreground/10 text-foreground ring-1 ring-foreground/25",
-        tone === "plain" && "bg-foreground/[0.07] text-foreground/70",
+        "inline-flex items-center gap-1 rounded-full border-2 border-[var(--ink)] px-2.5 py-0.5 text-xs leading-normal font-medium text-[var(--ink)]",
+        tone === "theirs" && "bg-[var(--pink)]",
+        tone === "yours" && "bg-[var(--lime)]",
+        tone === "plain" && "bg-[var(--card)]",
       )}
     >
       {children}
     </span>
-  );
-}
-
-/** A photo under a wine wash, so type sits on it and the palette holds. Light keeps the photo's own colours. */
-export function Wash({ image, strength = "medium", drift }: { image: string; strength?: "light" | "medium" | "strong"; drift?: boolean }) {
-  if (!image) return null;
-  return (
-    <>
-      <img
-        src={image}
-        alt=""
-        fetchPriority="high"
-        className={cn("absolute inset-0 -z-10 size-full object-cover", drift && "animate-drift motion-reduce:animate-none")}
-      />
-      <div
-        aria-hidden
-        className={cn(
-          "absolute inset-0 -z-10 bg-[var(--wine)] mix-blend-multiply",
-          strength === "light" ? "opacity-25" : strength === "medium" ? "opacity-45" : "opacity-70",
-        )}
-      />
-      <div aria-hidden className="absolute inset-0 -z-10 bg-linear-to-t from-black/55 via-black/10 to-black/30" />
-    </>
   );
 }
 

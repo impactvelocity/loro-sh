@@ -3,11 +3,10 @@ import { type RouteConfig, index, layout, route } from "@react-router/dev/routes
 export default [
   index("routes/index.tsx"),
 
-  // Signing in to the admin, when ADMIN_PASSWORD is set.
+  // Unlocking the admin, when ADMIN_PASSWORD is set.
   route("login", "routes/login.tsx"),
-  route("logout", "routes/logout.tsx"),
 
-  // Everything under /admin is behind the password (routes/admin/gate.tsx).
+  // Everything under /admin is view only until it's unlocked (routes/admin/gate.tsx).
   layout("routes/admin/gate.tsx", [
     // Outside the admin layout: it's where you pick a workspace, so there may
     // not be one to show a sidebar for.

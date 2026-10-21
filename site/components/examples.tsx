@@ -56,7 +56,7 @@ export function Examples() {
     <section id="examples" className="scroll-mt-16 pt-24 sm:pt-32">
       <Container>
         <div className="max-w-[40rem]">
-          <h2 className="font-display text-4xl leading-[1.05] tracking-[-0.015em] text-balance sm:text-5xl">
+          <h2 className="font-display text-4xl leading-[1.05] tracking-normal text-balance sm:text-5xl">
             Every page here came from one run
           </h2>
           <p className="mt-5 text-lg text-pretty text-slate">
@@ -67,7 +67,7 @@ export function Examples() {
 
         <article className="mt-14 grid grid-cols-1 gap-10 rounded-[28px] bg-muted p-5 sm:p-8 lg:grid-cols-12 lg:gap-12 lg:p-10">
           <div className="flex flex-col lg:col-span-5">
-            <h3 className="font-display text-3xl leading-tight tracking-[-0.01em] sm:text-[2.25rem]">
+            <h3 className="font-display text-3xl leading-tight tracking-normal sm:text-[2.25rem]">
               Bob&rsquo;s road trip to Mirage Valley
             </h3>
             <p className="mt-2 text-[15px] text-quiet">A three-day festival in Indio, April 16 to 18.</p>
@@ -126,7 +126,7 @@ export function Examples() {
           {more.map((item) => (
             <article key={item.title} className="flex flex-col rounded-[28px] bg-muted p-5 sm:p-6">
               <BrowserFrame src={item.src} alt={item.title} url={item.url} aspect="aspect-[4/3]" />
-              <h3 className="mt-6 font-display text-2xl font-medium leading-tight tracking-[-0.01em]">{item.title}</h3>
+              <h3 className="mt-6 font-display text-2xl font-medium leading-tight tracking-normal">{item.title}</h3>
               <p className="mt-1.5 text-sm text-quiet">{item.brand}</p>
               <p className="mt-4 text-[15px] leading-relaxed text-slate">{item.body}</p>
               <div className="mt-5 flex flex-wrap gap-2">

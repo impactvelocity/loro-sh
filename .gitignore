@@ -42,3 +42,11 @@ coverage/
 
 # Vercel
 .vercel
+
+# Internal: notes, hackathon submission and video work
+qloo-voice.md
+devpost.md
+video-script.md
+brag-output/
+site/app/devpost/
+site/scripts/devpost-graphics.mjs

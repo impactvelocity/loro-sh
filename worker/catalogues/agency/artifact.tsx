@@ -14,7 +14,8 @@
  * - Map and Agent: where it is, and who to call.
  *
  * Laid out like an architect's site: one wide photo, big tight headings,
- * and hairline rows of title, words and picture.
+ * and hairline rows of title, words and picture, in cool greys: the
+ * facts and how it fits on blue-grey panels, the agent on slate.
  */
 import {
   ArrowUpRightIcon,
@@ -297,7 +298,7 @@ export const artifactLayout = defineLayout({
   fields: {
     brand: f.text({ label: "Agency", default: "Fieldhouse Realty" }),
     logo: f.image({ label: "Logo" }),
-    accent: f.color({ label: "Accent", default: "#2f3b33" }),
+    accent: f.color({ label: "Accent", default: "#34465a" }),
     contact: f.link({ label: "Top button", default: { label: "Book a viewing", href: "#contact" } }),
     step: f.text({ label: "Listing step", default: "listing", help: stepHelp }),
     footer: f.longText({ label: "Footer note", help: "Where the listing came from is added after it." }),
@@ -319,7 +320,7 @@ export const artifactLayout = defineLayout({
             <CatalogueLink
               href={settings.contact.href}
               ctx={ctx}
-              className="inline-flex h-9 items-center rounded-full border border-current/25 px-4 text-sm font-medium transition-colors hover:bg-foreground hover:text-background"
+              className="inline-flex h-9 items-center rounded-(--radius) bg-[var(--brand)] px-4 text-sm font-medium text-[var(--brand-foreground)] transition-opacity hover:opacity-90"
             >
               {settings.contact.label}
             </CatalogueLink>
@@ -441,7 +442,7 @@ function CopyLink({ ctx, label }: { ctx: RenderContext; label: string }) {
         setCopied(true);
         setTimeout(() => setCopied(false), 2200);
       }}
-      className="inline-flex h-12 items-center gap-2 rounded-full px-5 font-medium ring-1 ring-current/25 transition-colors hover:bg-foreground/5"
+      className="inline-flex h-12 items-center gap-2 rounded-(--radius) px-5 font-medium ring-1 ring-current/25 transition-colors hover:bg-foreground/5"
     >
       {copied ? <CheckIcon className="size-4" /> : <LinkIcon className="size-4" />}
       {copied ? "Link copied" : label}
@@ -547,9 +548,9 @@ const listing = defineComponent({
         <h1 style={after(0)} className={cn(display, rise, "text-5xl leading-[0.95] @3xl:text-8xl")}>
           {data.address}
         </h1>
-        <dl style={after(1)} className={cn(rise, "grid grid-cols-2 border-t @3xl:grid-cols-4")}>
+        <dl style={after(1)} className={cn(rise, "grid grid-cols-2 rounded-(--radius) bg-[var(--sand)] @3xl:grid-cols-4")}>
           {facts.map((fact) => (
-            <div key={fact.label} className="flex flex-col gap-1 border-b py-4 pr-4 @3xl:border-b-0">
+            <div key={fact.label} className="flex flex-col gap-1 border-foreground/10 px-5 py-5 not-first:border-l @max-3xl:nth-3:border-l-0 @max-3xl:nth-[n+3]:border-t @3xl:px-7">
               <dt className="text-sm text-muted-foreground">{fact.label}</dt>
               <dd className="text-lg text-pretty tabular-nums">{fact.value}</dd>
             </div>
@@ -565,7 +566,7 @@ const listing = defineComponent({
             )}
             <div className="flex flex-wrap items-center gap-3">
               {props.cta.label && (
-                <CatalogueLink href={props.cta.href} ctx={ctx} className={cn(button, "rounded-full px-7")}>
+                <CatalogueLink href={props.cta.href} ctx={ctx} className={cn(button, "px-7")}>
                   {props.cta.label}
                 </CatalogueLink>
               )}
@@ -668,7 +669,7 @@ const fit = defineGenerated({
     const rows = (items: typeof fits, muted = false) => (
       <ul className="flex flex-col">
         {items.map((item, i) => (
-          <li key={i} className="grid gap-2 border-t py-6 @3xl:grid-cols-[2fr_3fr] @3xl:gap-16">
+          <li key={i} className="grid gap-2 border-t border-foreground/12 py-6 @3xl:grid-cols-[2fr_3fr] @3xl:gap-16">
             <h3 className={cn(display, "text-xl leading-snug @3xl:text-2xl", muted && "text-muted-foreground")}>{item?.title}</h3>
             <p className="text-lg text-pretty">{item?.body}</p>
           </li>
@@ -676,7 +677,7 @@ const fit = defineGenerated({
       </ul>
     );
     return (
-      <section className="flex flex-col gap-10">
+      <section className="-mx-5 flex flex-col gap-10 bg-[var(--sand)] px-5 py-12 @3xl:mx-0 @3xl:rounded-(--radius) @3xl:px-12 @3xl:py-14">
         <Heading text={props.heading} ctx={ctx} />
         {data?.verdict && (
           <p className={cn(display, "max-w-4xl text-2xl leading-snug @3xl:text-4xl")}>
@@ -1026,12 +1027,12 @@ const agent = defineComponent({
     const subject = `Viewing: ${data?.address ?? "the home you sent"}`;
     const href = props.email ? `mailto:${props.email}?subject=${encodeURIComponent(subject)}` : "";
     return (
-      <section className="grid gap-10 border-t pt-10 @3xl:grid-cols-[3fr_2fr] @3xl:gap-16">
+      <section className="-mx-5 grid gap-10 bg-[var(--deep)] px-5 py-12 text-[var(--deep-foreground)] @3xl:mx-0 @3xl:grid-cols-[3fr_2fr] @3xl:gap-16 @3xl:rounded-(--radius) @3xl:px-12 @3xl:py-14">
         <div className="flex flex-col items-start gap-5">
           {props.heading && <h2 className={sectionHeading}>{ctx.fill(props.heading)}</h2>}
           {props.message && <p className="max-w-xl text-lg text-pretty">{ctx.fill(props.message)}</p>}
           {href && props.button && (
-            <CatalogueLink href={href} ctx={ctx} className={cn(button, "mt-2 rounded-full")}>
+            <CatalogueLink href={href} ctx={ctx} className={cn(button, "mt-2 bg-[var(--deep-foreground)] text-[var(--deep)]")}>
               {props.button}
             </CatalogueLink>
           )}
@@ -1040,13 +1041,13 @@ const agent = defineComponent({
           {props.photo ? (
             <img src={props.photo} alt={props.name} className="size-16 shrink-0 rounded-full object-cover" />
           ) : (
-            <div className="flex size-16 shrink-0 items-center justify-center rounded-full bg-secondary text-muted-foreground">
+            <div className="flex size-16 shrink-0 items-center justify-center rounded-full bg-white/10">
               <UserRoundIcon className="size-6" />
             </div>
           )}
           <div className="flex flex-col gap-1">
             <p className={cn(display, "text-xl")}>{props.name}</p>
-            {props.role && <p className="text-muted-foreground">{props.role}</p>}
+            {props.role && <p className="opacity-70">{props.role}</p>}
             {props.phone && (
               <a href={`tel:${props.phone.replace(/[^\d+]/g, "")}`} className="mt-2 underline-offset-4 hover:underline">
                 {props.phone}

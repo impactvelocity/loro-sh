@@ -40,6 +40,7 @@ import { Input } from "@/admin-components/ui/input";
 import { Spinner } from "@/admin-components/ui/spinner";
 import { number } from "@/lib/format";
 import type { RouteHandle } from "@/lib/document";
+import { useReadOnly } from "@/hooks/use-read-only";
 import { readPreferences, savePreferences } from "@/lib/preferences";
 import { selectedWorkspace } from "@/lib/workspace.server";
 import { cn } from "@/lib/utils";
@@ -261,6 +262,7 @@ function NewWorkspaceDialog({ open, onOpenChange }: { open: boolean; onOpenChang
 
 export default function Workspaces({ loaderData }: Route.ComponentProps) {
   const { workspaces, current, canCreate } = loaderData;
+  const readOnly = useReadOnly();
   const [searchParams, setSearchParams] = useSearchParams();
   // ?new opens the dialog, so the sidebar switcher can link straight to it.
   const creating = searchParams.has("new");
@@ -274,10 +276,12 @@ export default function Workspaces({ loaderData }: Route.ComponentProps) {
       <PageHeader
         title="Workspaces"
         actions={
-          <Button size="sm" disabled={!canCreate} onClick={() => setCreating(true)}>
-            <PlusIcon data-icon="inline-start" />
-            New Workspace
-          </Button>
+          !readOnly && (
+            <Button size="sm" disabled={!canCreate} onClick={() => setCreating(true)}>
+              <PlusIcon data-icon="inline-start" />
+              New Workspace
+            </Button>
+          )
         }
       />
 
@@ -299,7 +303,7 @@ export default function Workspaces({ loaderData }: Route.ComponentProps) {
         </ul>
       )}
 
-      <NewWorkspaceDialog open={creating} onOpenChange={setCreating} />
+      {!readOnly && <NewWorkspaceDialog open={creating} onOpenChange={setCreating} />}
     </div>
   );
 }

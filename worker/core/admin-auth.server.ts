@@ -1,12 +1,14 @@
 /**
- * The admin password. Set the ADMIN_PASSWORD secret and the admin, and the
- * API routes it uses, need a sign-in; leave it unset and everything stays
- * open, as before, so fresh forks need no setup. The dev server never asks,
- * even with the password in .dev.vars, so local dev isn't blocked.
+ * The admin password. Set the ADMIN_PASSWORD secret and the admin is view
+ * only until it's unlocked: anyone can open it, but saving, adding,
+ * deleting and the agent need the password (routes/admin/gate.tsx), as do
+ * the API routes it uses. Leave it unset and everything stays open, as
+ * before, so fresh forks need no setup. The dev server never asks, even
+ * with the password in .dev.vars, so local dev isn't blocked.
  *
- * Signing in sets a cookie holding an expiry and an HMAC of it, keyed by
- * the password. Nothing is stored, and changing the password signs
- * everyone out.
+ * Unlocking sets a cookie holding an expiry and an HMAC of it, keyed by
+ * the password. Nothing is stored, and changing the password locks
+ * everyone out again.
  */
 import { env } from "cloudflare:workers";
 
@@ -69,17 +71,13 @@ function cookie(request: Request, value: string, maxAge: number) {
   return `${COOKIE}=${value}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAge}${secure}`;
 }
 
-/** The Set-Cookie header that signs this browser in. */
+/** The Set-Cookie header that unlocks the admin in this browser. */
 export async function signInCookie(request: Request) {
   const expires = Math.floor(Date.now() / 1000) + MAX_AGE;
   return cookie(request, `${expires}.${hex(await sign(`session:${expires}`))}`, MAX_AGE);
 }
 
-export function signOutCookie(request: Request) {
-  return cookie(request, "", 0);
-}
-
-/** Where to go after signing in: only a path on this site, so the link can't send anyone elsewhere. */
+/** Where to go after unlocking: only a path on this site, so the link can't send anyone elsewhere. */
 export function safeNext(next: string | null) {
   return next && next.startsWith("/") && !next.startsWith("//") ? next : "/admin";
 }

@@ -86,6 +86,29 @@ export function sampleAnswers(catalogue: Catalogue, config: ExperienceConfig): A
   );
 }
 
+/**
+ * The catalogue's sample profile `id`, ready to fill this experience's
+ * sign-up and questions. Only answers its questions take are kept: one the
+ * experience doesn't ask, or that no longer fits (an act taken off the
+ * bill), is left for them. `complete` when the sign-up and every answer
+ * are good to send as they are, so the page can skip to the outcome. With
+ * the intake off that's the only use: there's no form to fill.
+ */
+export function samplePrefill(catalogue: Catalogue, config: ExperienceConfig, id: string | null) {
+  const sample = id ? catalogue.samples?.find((s) => s.id === id) : undefined;
+  if (!sample) return null;
+  const person = optinSchema.safeParse(sample.person);
+  const answers: Answers = {};
+  for (const { block, definition } of inputsOf(catalogue, config)) {
+    const parsed = definition.input.schema(block.props).safeParse(sample.answers[block.id]);
+    if (block.id in sample.answers && parsed.success) answers[block.id] = parsed.data;
+  }
+  const complete = person.success && answersSchema(catalogue, config).safeParse(answers).success;
+  return { person: person.success ? person.data : null, answers, complete };
+}
+
+export type Prefill = NonNullable<ReturnType<typeof samplePrefill>>;
+
 export function displayAnswer(value: AnswerValue | undefined) {
   if (value === null || value === undefined) return "";
   if (Array.isArray(value)) return value.join(", ");

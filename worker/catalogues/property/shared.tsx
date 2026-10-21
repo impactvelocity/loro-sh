@@ -1,10 +1,11 @@
 /**
- * The Property catalogue's look: an editorial listing, like a single-home
- * site from a good agency. Cormorant Garamond for the big moments only
- * (the address, section headings, the questions, the buyer's name), Inter
- * for everything you read, the wordmark included. Photographs full bleed,
- * hairlines instead of boxes, sentence case everywhere, no pre-titles or
- * numbered steps. Colours come from the coast theme's tokens (--deep,
+ * The Property catalogue's look: a listing told in black and white, like
+ * a single-home site from a good agency. Archivo, bold and tight, for the
+ * big moments only (the address, section headings, the questions, the
+ * buyer's name), Inter for everything you read, the wordmark included.
+ * Photographs full bleed and in their own colour, black rules instead of
+ * boxes, square corners, sentence case everywhere, no pre-titles or
+ * numbered steps. Colours come from the mono theme's tokens (--deep,
  * --sand), so another theme can repaint it.
  */
 import type { ComponentType, CSSProperties, ReactNode } from "react";
@@ -12,11 +13,15 @@ import type { ComponentType, CSSProperties, ReactNode } from "react";
 import type { AnyDefinition, RenderContext } from "@core/catalogue/define";
 import { cn } from "@/lib/utils";
 
-/** Display type: the serif, light and tight. Size it where it's used. */
-export const display = "font-display font-[420] tracking-[-0.015em] leading-[0.95]";
+/**
+ * Display type: bold and tight. Size it where it's used. The line height
+ * is an arbitrary property, since cn() drops a leading-* when a text-[…]
+ * size follows it; set another with [line-height:…].
+ */
+export const display = "font-display font-[680] tracking-[-0.04em] [line-height:0.95]";
 
 /** On a layout: every h2 inside takes the display face, Basic components included. */
-export const displayHeadings = "[&_h2]:font-display [&_h2]:font-[420] [&_h2]:tracking-[-0.015em] [&_h2]:leading-[0.98]";
+export const displayHeadings = "[&_h2]:font-display [&_h2]:font-[680] [&_h2]:tracking-[-0.04em] [&_h2]:[line-height:0.95]";
 
 /** Supporting text: a distance, a caption, a source. */
 export const quiet = "text-sm text-muted-foreground";
@@ -44,38 +49,13 @@ export const field = cn(
   "placeholder:text-muted-foreground/70 focus-visible:border-[var(--brand)] focus-visible:ring-2 focus-visible:ring-[var(--brand)]/15 aria-invalid:border-red-600",
 );
 
-/** "Harbour & Grey": Inter, with the ampersand in italic serif. Or their own logo. */
+/** "Harbour & Grey" in the display face, bold. Or their own logo. */
 export function Logo({ brand, logo, className }: { brand: string; logo?: string; className?: string }) {
   if (logo) return <img src={logo} alt={brand} className="h-8 w-auto max-w-44 object-contain" />;
-  const parts = brand.split(/(\s&\s|\sand\s)/);
-  return (
-    <span className={cn("inline-flex items-baseline font-semibold leading-none tracking-[-0.03em]", className)}>
-      {parts.map((part, i) =>
-        /&|\sand\s/.test(part) ? (
-          <span key={i} className="px-[0.22em] font-display text-[1.3em] font-[420] italic">
-            &amp;
-          </span>
-        ) : (
-          <span key={i}>{part}</span>
-        ),
-      )}
-    </span>
-  );
+  return <span className={cn("font-display font-[720] [line-height:1] tracking-[-0.035em] whitespace-nowrap", className)}>{brand}</span>;
 }
 
-/** "West 2nd Avenue" with the last word in italic: one word set apart. */
-export function Accent({ text }: { text: string }) {
-  const words = text.trim().split(/\s+/);
-  if (words.length < 2) return <>{text}</>;
-  const last = words.pop();
-  return (
-    <>
-      {words.join(" ")} <em className="italic">{last}</em>
-    </>
-  );
-}
-
-/** A section's opening: a big serif heading on the left, an optional line on the right. */
+/** A section's opening: a big bold heading on the left, an optional line on the right. */
 export function SectionHead({ title, aside, className }: { title: ReactNode; aside?: ReactNode; className?: string }) {
   return (
     <div className={cn("grid gap-x-10 gap-y-5 @4xl:grid-cols-12 @4xl:items-end", className)}>
@@ -86,9 +66,9 @@ export function SectionHead({ title, aside, className }: { title: ReactNode; asi
 }
 
 /**
- * Every outcome section: a hairline, the heading in big serif on the left
- * (sticky while you read), the section on the right. In a narrow layout
- * (the Agency catalogue's) it stacks.
+ * Every outcome section: a black rule, the heading big and bold on the
+ * left (sticky while you read), the section on the right. In a narrow
+ * layout it stacks.
  */
 export function Frame({
   heading,
@@ -102,7 +82,7 @@ export function Frame({
   children: ReactNode;
 }) {
   return (
-    <section className="grid gap-x-10 gap-y-8 border-t border-border pt-8 @4xl:grid-cols-12">
+    <section className="grid gap-x-10 gap-y-8 border-t border-foreground pt-8 @4xl:grid-cols-12">
       <div className="@4xl:col-span-4">
         <div className="flex flex-col gap-5 @4xl:sticky @4xl:top-28">
           {heading && <h2 className={cn(display, "text-[clamp(2.5rem,5cqi,4.25rem)] text-balance")}>{ctx.fill(heading)}</h2>}
@@ -114,13 +94,13 @@ export function Frame({
   );
 }
 
-/** A small rounded label for a taste signal or a review keyword. Sentence case, never caps. */
+/** A small square label for a taste signal or a review keyword. Sentence case, never caps. */
 export function Chip({ children, tone = "plain" }: { children: ReactNode; tone?: "plain" | "taste" }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs leading-none",
-        tone === "taste" ? "bg-[var(--brand)]/10 text-[var(--brand)]" : "bg-foreground/[0.06] text-muted-foreground",
+        "inline-flex items-center gap-1 px-2 py-1 text-xs leading-none",
+        tone === "taste" ? "bg-foreground text-background" : "bg-foreground/[0.06] text-muted-foreground",
       )}
     >
       {children}

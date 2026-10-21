@@ -14,6 +14,7 @@ import {
   newThreadId,
   refKindLabels,
 } from "@core/agent";
+import { hasAdminSession } from "@core/admin-auth.server";
 import { deleteThread, getThread, listThreads, threadMessages } from "@core/agent.server";
 import { listFunnels } from "@core/funnels.server";
 import { since } from "@core/people";
@@ -22,6 +23,7 @@ import { type Attachable, Composer } from "@/admin-components/agent/composer";
 import { Markdown } from "@/admin-components/agent/markdown";
 import { type AgentToolPart, ApprovalCard, ToolLine } from "@/admin-components/agent/tool-line";
 import { ConfirmDeleteButton } from "@/admin-components/confirm-delete";
+import { ViewOnlyNote } from "@/admin-components/view-only";
 import { Bubble, BubbleContent } from "@/admin-components/ui/bubble";
 import { Button } from "@/admin-components/ui/button";
 import {
@@ -50,6 +52,7 @@ import {
   TraceLine,
   TraceTitle,
 } from "@/admin-components/ui/trace";
+import { useReadOnly } from "@/hooks/use-read-only";
 import { currentWorkspace } from "@/lib/workspace.server";
 
 export function meta({ loaderData }: Route.MetaArgs) {
@@ -69,8 +72,10 @@ export async function loader({ request }: Route.LoaderArgs) {
   // Every chat has its id in the URL from the start, so the first reply
   // and a reload land on the same thread.
   if (!threadId) {
+    // View only, there's no chatting, so open the latest thread instead of a blank one.
+    const [latest] = (await hasAdminSession(request)) ? [] : await listThreads(workspace.id, 1);
     // Built from scratch: on client navigations request.url is the .data fetch.
-    const next = new URLSearchParams({ thread: newThreadId() });
+    const next = new URLSearchParams({ thread: latest?.id ?? newThreadId() });
     const attach = url.searchParams.get("attach");
     if (attach) next.set("attach", attach);
     throw redirect(`/admin/agent?${next}`);
@@ -171,7 +176,8 @@ function ReasoningLine({ text, running }: { text: string; running: boolean }) {
 
 /**
  * The agent's turn, in the order it happened: thinking and tool calls as
- * trace lines, text as markdown, and approval cards where it waits on you.
+ * trace lines, text as markdown, and approval cards where it waits on you
+ * (not view only, where `onApproval` is left out).
  */
 function AgentTurn({
   message,
@@ -180,7 +186,7 @@ function AgentTurn({
 }: {
   message: AgentMessage;
   streaming: boolean;
-  onApproval: (id: string, approved: boolean) => void;
+  onApproval?: (id: string, approved: boolean) => void;
 }) {
   // Neighbouring steps share one trace, so a run of lookups reads as a list.
   const groups: ({ kind: "trace"; parts: AgentMessage["parts"] } | { kind: "text"; text: string; key: number })[] = [];
@@ -196,7 +202,7 @@ function AgentTurn({
   });
 
   const approvals = message.parts.filter(
-    (part): part is AgentToolPart => isToolUIPart(part) && part.state === "approval-requested",
+    (part): part is AgentToolPart => Boolean(onApproval) && isToolUIPart(part) && part.state === "approval-requested",
   );
   const waiting = streaming && groups.length === 0;
 
@@ -232,7 +238,7 @@ function AgentTurn({
           <ApprovalCard
             key={part.toolCallId}
             part={part}
-            onRespond={(approved) => part.approval && onApproval(part.approval.id, approved)}
+            onRespond={(approved) => part.approval && onApproval?.(part.approval.id, approved)}
           />
         ))}
       </MessageContent>
@@ -266,6 +272,7 @@ function Chat({ data }: { data: Route.ComponentProps["loaderData"] }) {
   const { workspace, threadId, thread, attachable } = data;
   const navigate = useNavigate();
   const revalidator = useRevalidator();
+  const readOnly = useReadOnly();
   const input = useRef<HTMLTextAreaElement>(null);
   const [refs, setRefs] = useState<AgentRef[]>(data.attach ? [data.attach] : []);
 
@@ -307,16 +314,18 @@ function Chat({ data }: { data: Route.ComponentProps["loaderData"] }) {
           <div className="min-w-0 flex-1">
             <ThreadMenu threads={data.threads} active={thread} />
           </div>
-          <div className="flex shrink-0 items-center gap-2">
-            {thread && <DeleteThread thread={thread} />}
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => navigate(`/admin/agent?thread=${newThreadId()}`)}
-            >
-              New Thread
-            </Button>
-          </div>
+          {!readOnly && (
+            <div className="flex shrink-0 items-center gap-2">
+              {thread && <DeleteThread thread={thread} />}
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => navigate(`/admin/agent?thread=${newThreadId()}`)}
+              >
+                New Thread
+              </Button>
+            </div>
+          )}
         </div>
       </header>
 
@@ -329,13 +338,15 @@ function Chat({ data }: { data: Route.ComponentProps["loaderData"] }) {
               {workspace.demo ? ". This demo is read-only." : ", or have the agent draft segments and skills for you to approve."}
             </p>
           </div>
-          <div className="flex flex-wrap justify-center gap-2">
-            {suggestions.map((suggestion) => (
-              <Button key={suggestion} variant="secondary" size="sm" onClick={() => send(suggestion)}>
-                {suggestion}
-              </Button>
-            ))}
-          </div>
+          {!readOnly && (
+            <div className="flex flex-wrap justify-center gap-2">
+              {suggestions.map((suggestion) => (
+                <Button key={suggestion} variant="secondary" size="sm" onClick={() => send(suggestion)}>
+                  {suggestion}
+                </Button>
+              ))}
+            </div>
+          )}
         </div>
       ) : (
         <MessageScrollerProvider autoScroll>
@@ -350,7 +361,7 @@ function Chat({ data }: { data: Route.ComponentProps["loaderData"] }) {
                       <AgentTurn
                         message={message}
                         streaming={busy && index === messages.length - 1}
-                        onApproval={(id, approved) => addToolApprovalResponse({ id, approved })}
+                        onApproval={readOnly ? undefined : (id, approved) => addToolApprovalResponse({ id, approved })}
                       />
                     )}
                   </MessageScrollerItem>
@@ -380,15 +391,19 @@ function Chat({ data }: { data: Route.ComponentProps["loaderData"] }) {
       )}
 
       <div className="mx-auto w-full max-w-3xl shrink-0 px-4 pb-6 md:px-6">
-        <Composer
-          inputRef={input}
-          attachable={attachable}
-          refs={refs}
-          onRefsChange={setRefs}
-          busy={busy}
-          onSend={send}
-          onStop={() => void stop()}
-        />
+        {readOnly ? (
+          <ViewOnlyNote>The agent reads and changes this workspace, so chatting with it needs the password.</ViewOnlyNote>
+        ) : (
+          <Composer
+            inputRef={input}
+            attachable={attachable}
+            refs={refs}
+            onRefsChange={setRefs}
+            busy={busy}
+            onSend={send}
+            onStop={() => void stop()}
+          />
+        )}
       </div>
     </div>
   );

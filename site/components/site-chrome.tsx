@@ -41,7 +41,7 @@ export function Closing() {
   return (
     <section className="py-24 sm:py-32">
       <Container className="flex flex-col items-center text-center">
-        <h2 className="max-w-[18ch] font-display text-4xl leading-[1.05] tracking-[-0.015em] text-balance sm:text-6xl">
+        <h2 className="max-w-[18ch] font-display text-4xl leading-[1.05] tracking-normal text-balance sm:text-6xl">
           Watch your own page get made
         </h2>
         <p className="mt-5 max-w-[46ch] text-lg text-pretty text-slate">

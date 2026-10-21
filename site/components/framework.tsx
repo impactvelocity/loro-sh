@@ -37,7 +37,7 @@ export function Framework() {
         <div className="overflow-hidden rounded-[28px] bg-deep text-white">
           <div className="grid grid-cols-1 gap-12 p-6 sm:p-10 lg:grid-cols-12 lg:gap-14 lg:p-14">
             <div className="lg:col-span-5">
-              <h2 className="font-display text-4xl leading-[1.05] tracking-[-0.015em] text-balance sm:text-5xl">
+              <h2 className="font-display text-4xl leading-[1.05] tracking-normal text-balance sm:text-5xl">
                 Open source, on your own Cloudflare account
               </h2>
               <p className="mt-5 text-lg leading-relaxed text-pretty text-white/70">

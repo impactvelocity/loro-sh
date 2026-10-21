@@ -1,7 +1,7 @@
 /**
  * The Date catalogue's questions: one a screen on cream, the question
- * in big serif, and on wide screens a photo beside it that changes as
- * they go (the layout's photos, in turn).
+ * in big capitals, and on wide screens a framed photo beside it that
+ * changes as they go (the layout's photos, in turn), on lilac.
  *
  * - Area Picker: where the date is. Neighbourhoods with a point each, or
  *   one they type; the Date Plan step finds either on the map.
@@ -23,7 +23,7 @@ import { f } from "@core/catalogue/fields";
 import { cn } from "@/lib/utils";
 import { intakeComponents as basicIntake } from "../basic/intake";
 import { areaFields } from "./date";
-import { Logo, body, button, display, light, line, restyle } from "./shared";
+import { Logo, body, button, display, fill, framed, heart, line, restyle, rule } from "./shared";
 
 export const intakeLayout = defineLayout({
   fields: {
@@ -44,26 +44,28 @@ export const intakeLayout = defineLayout({
     const index = nav?.index ?? 0;
     const progress = nav ? (nav.index + 1) / Math.max(nav.total, 1) : 1;
     return (
-      <div style={light} className={cn("flex min-h-svh flex-1 antialiased", body)}>
+      <div style={fill("cream")} className={cn("flex min-h-svh flex-1 antialiased", body)}>
         <div className="flex min-w-0 flex-1 flex-col">
-          <header className="flex h-20 items-center justify-between gap-4 px-5 @3xl:px-10 @6xl:px-16">
-            <Logo brand={settings.brand} logo={settings.logo} className="text-[1.75rem]" />
+          <header className={cn("flex h-18 items-stretch justify-between gap-4 border-b-2 bg-[var(--card)] px-5 @3xl:px-10 @6xl:px-16", rule)}>
+            <span className="flex items-center">
+              <Logo brand={settings.brand} logo={settings.logo} className="text-[2.1rem]" />
+            </span>
             {nav && (
-              <span className="text-sm tabular-nums opacity-70">
+              <span className={cn("flex items-center border-l-2 pl-5 text-sm font-semibold tabular-nums", rule)}>
                 {nav.index + 1} of {nav.total}
               </span>
             )}
           </header>
           {nav && (
-            <div className="h-px bg-foreground/15" role="progressbar" aria-valuemin={0} aria-valuemax={nav.total} aria-valuenow={nav.index + 1}>
-              <div className="h-full bg-foreground transition-[width] duration-500 ease-out" style={{ width: `${progress * 100}%` }} />
+            <div className={cn("h-3 border-b-2 bg-[var(--card)]", rule)} role="progressbar" aria-valuemin={0} aria-valuemax={nav.total} aria-valuenow={nav.index + 1}>
+              <div className={cn("h-full border-r-2 bg-[var(--pink)] transition-[width] duration-500 ease-out", rule)} style={{ width: `${progress * 100}%` }} />
             </div>
           )}
           <main className="flex flex-1 flex-col justify-center px-5 py-14 @3xl:px-10 @6xl:px-16">
             <div className="w-full max-w-2xl">{children}</div>
           </main>
           {nav?.error && (
-            <p role="alert" className="max-w-2xl px-5 pb-3 text-sm text-[var(--blush)] @3xl:px-10 @6xl:px-16">
+            <p role="alert" className="max-w-2xl px-5 pb-3 text-sm font-semibold text-[var(--heart)] @3xl:px-10 @6xl:px-16">
               {nav.error}
             </p>
           )}
@@ -72,12 +74,12 @@ export const intakeLayout = defineLayout({
               {nav.isFirst ? (
                 <span />
               ) : (
-                <button type="button" onClick={nav.back} className="inline-flex h-12 items-center gap-2 px-1 opacity-70 transition-opacity hover:opacity-100">
+                <button type="button" onClick={nav.back} className="inline-flex h-12 items-center gap-2 px-1 font-semibold opacity-75 transition-opacity hover:opacity-100">
                   <ArrowLeftIcon className="size-4" />
                   Back
                 </button>
               )}
-              <button type="button" onClick={nav.next} disabled={nav.pending} className={cn(button, "h-14 px-8")}>
+              <button type="button" onClick={nav.next} disabled={nav.pending} className={cn(button, nav.isLast && heart, "h-14 px-8")}>
                 {nav.pending ? "One moment…" : nav.isLast ? settings.submit : settings.next}
                 {!nav.pending && <ArrowRightIcon className="size-4" />}
               </button>
@@ -85,19 +87,20 @@ export const intakeLayout = defineLayout({
           )}
         </div>
         {photos.length > 0 && (
-          <aside className="relative isolate w-[40%] shrink-0 overflow-hidden bg-[var(--deep)] @max-4xl:hidden">
-            {photos.map((photo, i) => (
-              <img
-                key={i}
-                src={photo.image}
-                alt=""
-                className={cn(
-                  "absolute inset-0 -z-10 size-full object-cover transition-opacity duration-1000 ease-out",
-                  i === index % photos.length ? "opacity-100" : "opacity-0",
-                )}
-              />
-            ))}
-            <div aria-hidden className="absolute inset-0 -z-10 bg-[var(--wine)] opacity-20 mix-blend-multiply" />
+          <aside className={cn("flex w-[40%] shrink-0 items-center justify-center border-l-2 bg-[var(--lilac)] p-12 @max-4xl:hidden @6xl:p-16", rule)}>
+            <div className={cn(framed, "relative isolate aspect-[4/5] w-full max-w-lg overflow-hidden")}>
+              {photos.map((photo, i) => (
+                <img
+                  key={i}
+                  src={photo.image}
+                  alt=""
+                  className={cn(
+                    "absolute inset-0 -z-10 size-full object-cover transition-opacity duration-1000 ease-out",
+                    i === index % photos.length ? "opacity-100" : "opacity-0",
+                  )}
+                />
+              ))}
+            </div>
           </aside>
         )}
       </div>
@@ -105,20 +108,20 @@ export const intakeLayout = defineLayout({
   },
 });
 
-/** The question in big serif, its hint, the answer, and any error. */
+/** The question in big capitals, its hint, the answer, and any error. */
 function Question({ htmlFor, question, help, error, children }: { htmlFor?: string; question: string; help: string; error?: string; children: ReactNode }) {
   const Label = htmlFor ? "label" : "legend";
   return (
     <fieldset className="flex flex-col gap-9">
       <div className="flex flex-col gap-4">
-        <Label htmlFor={htmlFor} className={cn(display, "text-[clamp(2.5rem,5.5cqi,4.25rem)] text-balance")}>
+        <Label htmlFor={htmlFor} className={cn(display, "text-[clamp(3rem,6.5cqi,5.25rem)] text-balance")}>
           {question}
         </Label>
-        {help && <p className="max-w-xl text-lg leading-relaxed text-pretty opacity-75">{help}</p>}
+        {help && <p className="max-w-xl text-lg leading-relaxed text-pretty opacity-80">{help}</p>}
       </div>
       {children}
       {error && (
-        <p role="alert" className="text-sm text-[var(--blush)]">
+        <p role="alert" className="text-sm font-semibold text-[var(--heart)]">
           {error}
         </p>
       )}
@@ -126,7 +129,13 @@ function Question({ htmlFor, question, help, error, children }: { htmlFor?: stri
   );
 }
 
-/** One answer you can pick: a hairline row that fills with the button colour. */
+/** A card you can pick: a black outline that lifts on hover. */
+const pick = cn(
+  "border-2 border-[var(--ink)] text-[var(--ink)] transition-[background-color,transform,box-shadow] outline-none",
+  "hover:-translate-y-0.5 hover:shadow-[0_3px_0_var(--ink)] active:translate-y-0 focus-visible:ring-2 focus-visible:ring-[var(--ink)] focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+);
+
+/** One answer you can pick: a white card in a black outline that turns yellow. */
 function Option({ on, multiple, onClick, children }: { on: boolean; multiple: boolean; onClick: () => void; children: ReactNode }) {
   return (
     <button
@@ -135,17 +144,17 @@ function Option({ on, multiple, onClick, children }: { on: boolean; multiple: bo
       aria-checked={on}
       onClick={onClick}
       className={cn(
-        "flex min-h-15 items-center justify-between gap-4 rounded-(--radius) px-5 py-3 text-left text-lg ring-1 transition-[background-color,color,box-shadow] outline-none",
-        "focus-visible:ring-2 focus-visible:ring-foreground",
-        on ? "bg-[var(--button)] text-[var(--button-foreground)] ring-[var(--button)]" : "ring-foreground/25 hover:bg-foreground/[0.06] hover:ring-foreground/50",
+        pick,
+        "flex min-h-15 items-center justify-between gap-4 px-5 py-3 text-left text-lg font-medium",
+        on ? "bg-[var(--yellow)] shadow-[0_3px_0_var(--ink)]" : "bg-[var(--card)]",
       )}
     >
       <span className="text-pretty">{children}</span>
       <span
         className={cn(
-          "flex size-5 shrink-0 items-center justify-center ring-1 transition-colors",
-          multiple ? "rounded-[2px]" : "rounded-full",
-          on ? "bg-[var(--button-foreground)] text-[var(--button)] ring-[var(--button-foreground)]" : "ring-foreground/40",
+          "flex size-6 shrink-0 items-center justify-center border-2 border-[var(--ink)] transition-colors",
+          multiple ? "rounded-none" : "rounded-full",
+          on ? "bg-[var(--ink)] text-[var(--yellow)]" : "bg-[var(--card)]",
         )}
       >
         {on && <CheckIcon className="size-3.5" strokeWidth={3} />}
@@ -190,7 +199,7 @@ const area = defineInput({
         <div className="flex flex-col gap-7" role="radiogroup" aria-label={props.question}>
           {cities.map((city) => (
             <div key={city} className="flex flex-col gap-2">
-              {city && <span className="text-sm opacity-70">{city}</span>}
+              {city && <span className="text-sm font-semibold">{city}</span>}
               <div className="grid gap-2 @xl:grid-cols-3">
                 {props.options
                   .filter((option) => option.name.split(",").slice(1).join(",").trim() === city)
@@ -204,15 +213,13 @@ const area = defineInput({
                         aria-checked={on}
                         onClick={() => field.pick(option.name)}
                         className={cn(
-                          "flex min-h-24 flex-col items-start justify-between gap-3 rounded-(--radius) p-4 text-left ring-1 transition-[background-color,color,transform] outline-none",
-                          "focus-visible:ring-2 focus-visible:ring-foreground",
-                          on
-                            ? "bg-[var(--button)] text-[var(--button-foreground)] ring-[var(--button)]"
-                            : "ring-foreground/25 hover:bg-foreground/[0.06] hover:ring-foreground/50 active:scale-[0.98]",
+                          pick,
+                          "flex min-h-24 flex-col items-start justify-between gap-3 p-4 text-left",
+                          on ? "bg-[var(--yellow)] shadow-[0_3px_0_var(--ink)]" : "bg-[var(--card)]",
                         )}
                       >
-                        <span className={cn(display, "text-[1.65rem] leading-none")}>{option.name.split(",")[0]}</span>
-                        {option.note && <span className={cn("text-sm leading-snug", on ? "opacity-80" : "opacity-65")}>{option.note}</span>}
+                        <span className={cn(display, "text-[2rem] [line-height:1]")}>{option.name.split(",")[0]}</span>
+                        {option.note && <span className="text-sm leading-snug opacity-75">{option.note}</span>}
                       </button>
                     );
                   })}
@@ -222,7 +229,7 @@ const area = defineInput({
         </div>
         {props.other && (
           <label className="flex flex-col gap-2">
-            <span className="text-sm opacity-70">Somewhere else?</span>
+            <span className="text-sm font-semibold">Somewhere else?</span>
             <input
               value={listed ? "" : field.value}
               onChange={(e) => field.onChange(e.target.value)}
@@ -279,7 +286,7 @@ const when = defineInput({
             return (
               <Option key={label} on={field.value === label} multiple={false} onClick={() => field.pick(label)}>
                 <span className="flex flex-col">
-                  <span className={cn(display, "text-[1.65rem] leading-tight")}>{day}</span>
+                  <span className={cn(display, "text-[2rem] [line-height:1]")}>{day}</span>
                   {rest.length > 0 && <span className="text-sm opacity-75">{rest.join(",").trim()}</span>}
                 </span>
               </Option>
@@ -288,7 +295,7 @@ const when = defineInput({
         </div>
         {props.other && (
           <label className="flex flex-col gap-2">
-            <span className="text-sm opacity-70">Another time?</span>
+            <span className="text-sm font-semibold">Another time?</span>
             <input
               value={listed ? "" : field.value}
               onChange={(e) => field.onChange(e.target.value)}
@@ -420,9 +427,9 @@ const scale = restyle(
                 onClick={() => field.pick(n)}
                 className={cn(
                   display,
-                  "flex h-16 items-center justify-center rounded-(--radius) text-3xl tabular-nums ring-1 transition-[background-color,color,box-shadow] outline-none",
-                  "focus-visible:ring-2 focus-visible:ring-foreground",
-                  on ? "bg-[var(--button)] text-[var(--button-foreground)] ring-[var(--button)]" : "ring-foreground/25 hover:bg-foreground/[0.06]",
+                  pick,
+                  "flex h-16 items-center justify-center text-4xl tabular-nums",
+                  on ? "bg-[var(--yellow)] shadow-[0_3px_0_var(--ink)]" : "bg-[var(--card)]",
                 )}
               >
                 {n}
@@ -446,12 +453,12 @@ const statement = restyle(
     <div className="flex flex-col gap-6">
       {props.media.url &&
         (props.media.type === "video" ? (
-          <video src={props.media.url} className="aspect-[16/9] w-full object-cover" autoPlay muted loop playsInline />
+          <video src={props.media.url} className={cn(framed, "aspect-[16/9] w-full")} autoPlay muted loop playsInline />
         ) : (
-          <img src={props.media.url} alt="" className="aspect-[16/9] w-full object-cover" />
+          <img src={props.media.url} alt="" className={cn(framed, "aspect-[16/9] w-full")} />
         ))}
-      <h2 className={cn(display, "text-[clamp(2.5rem,5.5cqi,4.25rem)] text-balance")}>{ctx.fill(props.title)}</h2>
-      {props.body && <p className="max-w-xl text-lg leading-relaxed text-pretty opacity-75">{ctx.fill(props.body)}</p>}
+      <h2 className={cn(display, "text-[clamp(3rem,6.5cqi,5.25rem)] text-balance")}>{ctx.fill(props.title)}</h2>
+      {props.body && <p className="max-w-xl text-lg leading-relaxed text-pretty opacity-80">{ctx.fill(props.body)}</p>}
     </div>
   ),
 );

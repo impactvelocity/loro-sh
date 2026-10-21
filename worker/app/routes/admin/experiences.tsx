@@ -8,6 +8,7 @@ import { listFunnels } from "@core/funnels.server";
 import { StatusBadge } from "@/admin-components/experience-status";
 import { PageHeader } from "@/admin-components/page-header";
 import { buttonVariants } from "@/admin-components/ui/button";
+import { useReadOnly } from "@/hooks/use-read-only";
 import { currentWorkspace } from "@/lib/workspace.server";
 
 export function meta() {
@@ -34,6 +35,7 @@ const updated = (seconds: number) =>
 
 export default function Experiences({ loaderData }: Route.ComponentProps) {
   const { funnels } = loaderData;
+  const readOnly = useReadOnly();
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-10">
@@ -41,10 +43,12 @@ export default function Experiences({ loaderData }: Route.ComponentProps) {
         title="Experiences"
         docs={{ slug: "experiences", tooltip: "How experiences work" }}
         actions={
-          <Link to="/admin/experiences/new" className={buttonVariants({ size: "sm" })}>
-            <PlusIcon data-icon="inline-start" />
-            New Experience
-          </Link>
+          !readOnly && (
+            <Link to="/admin/experiences/new" className={buttonVariants({ size: "sm" })}>
+              <PlusIcon data-icon="inline-start" />
+              New Experience
+            </Link>
+          )
         }
       />
 
@@ -82,18 +86,20 @@ export default function Experiences({ loaderData }: Route.ComponentProps) {
           </li>
         ))}
 
-        <li>
-          <Link
-            to="/admin/experiences/new"
-            className="flex aspect-[4/3] flex-col items-center justify-center gap-2 rounded-xl border border-dashed text-center transition-colors outline-none hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-          >
-            <PlusIcon className="mb-1 size-5" />
-            <span className="text-sm font-medium">New Experience</span>
-            <span className="max-w-56 text-sm text-muted-foreground">
-              Pick a catalogue and start from its example.
-            </span>
-          </Link>
-        </li>
+        {!readOnly && (
+          <li>
+            <Link
+              to="/admin/experiences/new"
+              className="flex aspect-[4/3] flex-col items-center justify-center gap-2 rounded-xl border border-dashed text-center transition-colors outline-none hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            >
+              <PlusIcon className="mb-1 size-5" />
+              <span className="text-sm font-medium">New Experience</span>
+              <span className="max-w-56 text-sm text-muted-foreground">
+                Pick a catalogue and start from its example.
+              </span>
+            </Link>
+          </li>
+        )}
       </ul>
     </div>
   );

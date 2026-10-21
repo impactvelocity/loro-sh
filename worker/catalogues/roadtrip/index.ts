@@ -50,6 +50,23 @@ export default defineCatalogue({
     artifact: { layout: artifactLayout, components: artifactComponents },
   },
   skills: mirageSkills,
+  // Theo's answers from the demo workspace's example run.
+  samples: [
+    {
+      id: "theo",
+      person: { name: "Theo Lindqvist", email: "theo.lindqvist@example.com" },
+      answers: {
+        origin: "Portland, OR",
+        excited: ["Bon Iver", "Fleet Foxes", "Khruangbin", "The National"],
+        also: "Big Thief, Fleetwood Mac, Neil Young",
+        crew: "Me and my partner",
+        hours: "Up to 6 hours",
+        stops: ["Good coffee", "A view or a short hike", "Record stores and vintage shops"],
+        sleep: "Somewhere with a bit of character",
+        arrive: "Thursday, when camping opens",
+      },
+    },
+  ],
   example: {
     catalogue: "roadtrip",
     name: "Mirage Valley Road Trip",

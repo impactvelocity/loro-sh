@@ -19,7 +19,7 @@ import { intakeComponents, intakeLayout } from "../basic/intake";
 import { startComponents, startLayout } from "../basic/start";
 import { artifactComponents, artifactLayout } from "./artifact";
 
-const brand = { brand: "Fieldhouse Realty", logo: "", accent: "#2f3b33" };
+const brand = { brand: "Fieldhouse Realty", logo: "", accent: "#34465a" };
 
 const near = (name: string, kinds: string[], radius: number, take: number) => ({
   name,
@@ -70,13 +70,30 @@ export default defineCatalogue({
   id: "agency",
   name: "Agency",
   description: "An agent sends a buyer the home they found for them, and the life around it. Started from the admin or the API.",
-  theme: "coast",
+  theme: "slate",
   parts: {
     start: { layout: startLayout, components: startComponents },
     intake: { layout: intakeLayout, components: intakeComponents },
     artifact: { layout: artifactLayout, components: artifactComponents },
   },
   skills,
+  // What the agent would fill in, so the demo can start a page without the
+  // admin. The link is a live rew.ca listing in Point Grey: when it sells and
+  // comes down, swap in another one that steps/listing.ts can read.
+  samples: [
+    {
+      id: "lena",
+      person: { name: "Lena Park", email: "lena.park@example.com" },
+      answers: {
+        link: "https://www.rew.ca/properties/4333-locarno-crescent-vancouver-bc",
+        note: "This one fits the list: five bedrooms up, a suite downstairs Tom could work from, and Locarno Beach close by.",
+        week: "Moving up from Seattle. Lena starts at BC Children's Hospital in January, mostly day shifts. Tom works from home and is on calls most mornings. Two kids, 8 and 11, both swim. Weekends are bikes, the beach and a bookshop.",
+        favourites: "Milstead & Co., breakfast at Café Presse, Sundays at Discovery Park, Elliott Bay Book Company, Brandi Carlile, Death Cab for Cutie",
+        priorities: ["Good coffee", "Parks and playgrounds", "Museums and galleries"],
+        "must-haves": "Under 30 minutes to BC Children's Hospital at rush hour. A room for Tom with a door that shuts.",
+      },
+    },
+  ],
   example: {
     catalogue: "agency",
     name: "Buyer Match",

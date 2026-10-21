@@ -23,6 +23,7 @@ import type { Answers, AnswerValue, Catalogue, PartId, Person } from "./define";
 import type { RunState } from "../outcome/state";
 import type { ExperienceClient } from "./client";
 import {
+  type Prefill,
   answersSchema,
   emptyAnswers,
   errorsOf,
@@ -46,6 +47,11 @@ export type UseExperienceOptions = {
   /** Already known, e.g. an experience started by API. */
   person?: Person | null;
   answers?: Answers;
+  /**
+   * A sample profile to start from (samplePrefill): its answers are filled
+   * in, and the runner fills the sign-up form. They still send both.
+   */
+  prefill?: Prefill | null;
   /** An outcome that's already being made or done, e.g. on its own page. */
   run?: RunState | null;
   /** Saves sign-ups and answers through Loro's API. */
@@ -71,6 +77,7 @@ export function useExperience({
   stage: initialStage,
   person: initialPerson = null,
   answers: initialAnswers,
+  prefill,
   run: initialRun = null,
   client,
   onOptin = ok,
@@ -80,7 +87,11 @@ export function useExperience({
   const stages = stagesOf(config);
   const [stageState, setStage] = useState<PartId>(initialStage ?? stages[0]);
   const [person, setPerson] = useState<Person | null>(initialPerson);
-  const [answers, setAnswers] = useState<Answers>(() => ({ ...emptyAnswers(catalogue, config), ...initialAnswers }));
+  const [answers, setAnswers] = useState<Answers>(() => ({
+    ...emptyAnswers(catalogue, config),
+    ...prefill?.answers,
+    ...initialAnswers,
+  }));
   const [step, setStep] = useState(0);
   const [optinErrors, setOptinErrors] = useState<Record<string, string>>({});
   const [answerErrors, setAnswerErrors] = useState<Record<string, string>>({});

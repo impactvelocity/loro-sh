@@ -82,13 +82,30 @@ export default defineCatalogue({
   id: "date",
   name: "Date",
   description: "A first date planned around what the other person loves: a few hours, a walk apart, with the text to send. Started by a dating app's API.",
-  theme: "velvet",
+  theme: "pop",
   parts: {
     start: { layout: startLayout, components: startComponents },
     intake: { layout: intakeLayout, components: intakeComponents },
     artifact: { layout: artifactLayout, components: artifactComponents },
   },
   skills,
+  // Priyanka's answers from the demo workspace's example run.
+  samples: [
+    {
+      id: "priyanka",
+      person: { name: "Priyanka Rao", email: "priyanka.rao@example.com" },
+      answers: {
+        match: "Ben",
+        where: "Mount Pleasant, Vancouver",
+        when: "Saturday, from 2 PM",
+        their_taste: "Mac DeMarco, Wes Anderson films, Kinfolk, Rain or Shine ice cream, record shopping",
+        your_taste: "Japanese Breakfast, Studio Ghibli, ramen",
+        pace: "Doing something side by side",
+        budget: "$ · Keep it casual",
+        avoid: "Vegetarian",
+      },
+    },
+  ],
   example: {
     catalogue: "date",
     name: "First Date",
@@ -141,6 +158,7 @@ export default defineCatalogue({
               title: "Four hours, planned around what they love",
               body: "Name a few things they love from their profile. We'll plan a first drink, dinner and somewhere after in one neighbourhood, each a short walk from the last.",
               image: photos.ferris,
+              tone: "pink",
               signup: true,
               askName: true,
               button: "Plan the date",
@@ -158,6 +176,7 @@ export default defineCatalogue({
                 "Their favourites count three times yours, so the places lean their way and land where your two lists meet.",
               image: photos.records,
               side: "left",
+              tone: "cream",
             },
           },
           {
@@ -170,6 +189,7 @@ export default defineCatalogue({
                 "The plan gives the walk to each stop and directions for the whole route.",
               image: photos.street,
               side: "right",
+              tone: "lime",
             },
           },
           {
@@ -180,6 +200,7 @@ export default defineCatalogue({
               body: "The plan ends with a message for them: the day, the time and where to meet. Send it, and keep the rest a surprise.",
               image: photos.cones,
               side: "left",
+              tone: "pink",
             },
           },
           {
@@ -242,6 +263,7 @@ export default defineCatalogue({
               headline: "Plan the date",
               body: "Eight questions, then a plan you can send them tonight.",
               image: photos.bunting,
+              tone: "lilac",
               askName: true,
               button: "Start",
               note: "We'll only email you your plan.",
@@ -407,7 +429,6 @@ export default defineCatalogue({
             props: {
               title: "{{day}} with {{answers.match}}",
               intro: "Four hours in {{area}}, built on what {{answers.match}} loves. Every stop is a short walk from the last.",
-              image: photos.lights,
               link: { label: "See the plan", href: "#plan" },
               making: "Planning the date with {{answers.match}}",
             },

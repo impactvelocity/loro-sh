@@ -1,6 +1,6 @@
 /**
  * The Property catalogue's questions: one a screen, split like a listing
- * brochure. The question in big serif on the left; on the right, a photo
+ * brochure. The question big and bold on the left; on the right, a photo
  * of the house that changes as they answer (the layout's photos, in
  * turn), so they're picturing the place while they describe their week.
  *
@@ -22,7 +22,7 @@ export const intakeLayout = defineLayout({
   fields: {
     brand: f.text({ label: "Agency name", default: "Harbour & Grey" }),
     logo: f.image({ label: "Logo" }),
-    accent: f.color({ label: "Accent", default: "#24332f" }),
+    accent: f.color({ label: "Accent", default: "#111111" }),
     photos: f.list({
       label: "Photos",
       itemLabel: "Photo",
@@ -105,7 +105,7 @@ export const intakeLayout = defineLayout({
   },
 });
 
-/** The question in big serif, its hint, the answer, and any error. */
+/** The question big and bold, its hint, the answer, and any error. */
 function Question({
   htmlFor,
   question,
@@ -123,7 +123,7 @@ function Question({
   return (
     <fieldset className="flex flex-col gap-9">
       <div className="flex flex-col gap-4">
-        <Label htmlFor={htmlFor} className={cn(display, "text-[clamp(2.5rem,5.5cqi,4rem)] leading-[1] text-balance")}>
+        <Label htmlFor={htmlFor} className={cn(display, "text-[clamp(2.5rem,5.5cqi,4rem)] [line-height:1] text-balance")}>
           {question}
         </Label>
         {help && <p className="max-w-xl text-lg leading-relaxed text-muted-foreground text-pretty">{help}</p>}
@@ -276,7 +276,7 @@ const statement = restyle(
         ) : (
           <img src={props.media.url} alt="" className="aspect-[16/9] w-full rounded-(--radius) object-cover" />
         ))}
-      <h2 className={cn(display, "text-[clamp(2.5rem,5.5cqi,4rem)] leading-[1] text-balance")}>{ctx.fill(props.title)}</h2>
+      <h2 className={cn(display, "text-[clamp(2.5rem,5.5cqi,4rem)] [line-height:1] text-balance")}>{ctx.fill(props.title)}</h2>
       {props.body && <p className="max-w-xl text-lg leading-relaxed text-muted-foreground text-pretty">{ctx.fill(props.body)}</p>}
     </div>
   ),

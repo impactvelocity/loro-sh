@@ -26,6 +26,7 @@ import { Spinner } from "@/admin-components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/admin-components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@/admin-components/ui/tabs";
 import { Textarea } from "@/admin-components/ui/textarea";
+import { useReadOnly } from "@/hooks/use-read-only";
 import { number } from "@/lib/format";
 import { currentWorkspace } from "@/lib/workspace.server";
 
@@ -316,6 +317,7 @@ export default function Profiles({ loaderData }: Route.ComponentProps) {
   const [query, setQuery] = useState("");
   const [source, setSource] = useState<Source | "all">("all");
   const [creating, setCreating] = useState(false);
+  const readOnly = useReadOnly();
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-10">
@@ -327,10 +329,12 @@ export default function Profiles({ loaderData }: Route.ComponentProps) {
             : { slug: "individuals", tooltip: "How individual profiles are built" }
         }
         actions={
-          <Button size="sm" onClick={() => setCreating(true)}>
-            <PlusIcon data-icon="inline-start" />
-            {view === "segments" ? "New Segment" : "Add Person"}
-          </Button>
+          !readOnly && (
+            <Button size="sm" onClick={() => setCreating(true)}>
+              <PlusIcon data-icon="inline-start" />
+              {view === "segments" ? "New Segment" : "Add Person"}
+            </Button>
+          )
         }
       />
 
@@ -387,7 +391,7 @@ export default function Profiles({ loaderData }: Route.ComponentProps) {
         )}
       </div>
 
-      {view === "segments" ? (
+      {readOnly ? null : view === "segments" ? (
         <NewSegmentDialog key="segment" open={creating} onOpenChange={setCreating} />
       ) : (
         <AddPersonDialog key="person" open={creating} onOpenChange={setCreating} segments={segments} />

@@ -17,6 +17,10 @@
  * The facts go into the profile as a note, so every section writes from
  * the real listing. The photos and numbers are the step's public data:
  * the Listing component on the outcome page draws them.
+ *
+ * A read is cached in KV for 6 hours. The last good one is kept for 30
+ * days and stands in when the site later turns the step away, or the
+ * listing comes down.
  */
 import { HouseIcon } from "lucide-react";
 import { Output, generateText } from "ai";
@@ -45,6 +49,8 @@ export type ListingData = {
 
 /** A listing read once is kept this long, so running the same link again doesn't ask the site twice. */
 const CACHE_SECONDS = 6 * 60 * 60;
+/** The last good read is kept this long, to stand in when the site turns a later read away. */
+const LAST_SECONDS = 30 * 24 * 60 * 60;
 
 const BROWSER_UA =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36";
@@ -304,9 +310,19 @@ export default defineStep({
     const host = url.host.replace(/^www\./, "");
 
     const key = `listing:v3:${url}`;
-    const cached = await ctx.env.CACHE.get<ListingData>(key, "json").catch(() => null);
-    const data = cached ?? (await readListing(url, host, props.photos, ctx));
-    if (!cached) await ctx.env.CACHE.put(key, JSON.stringify(data), { expirationTtl: CACHE_SECONDS }).catch(() => {});
+    const last = `listing:last:v3:${url}`;
+    let data = await ctx.env.CACHE.get<ListingData>(key, "json").catch(() => null);
+    if (!data) {
+      try {
+        data = await readListing(url, host, props.photos, ctx);
+        await ctx.env.CACHE.put(last, JSON.stringify(data), { expirationTtl: LAST_SECONDS }).catch(() => {});
+      } catch (error) {
+        // A bot check, or the listing came down: the last good read stands in, if there is one.
+        data = await ctx.env.CACHE.get<ListingData>(last, "json").catch(() => null);
+        if (!data) throw error;
+      }
+      await ctx.env.CACHE.put(key, JSON.stringify(data), { expirationTtl: CACHE_SECONDS }).catch(() => {});
+    }
     const { point, photos } = data;
     const rooms = [data.beds && `${data.beds} bed`, data.baths && `${data.baths} bath`, data.size, data.kind]
       .filter(Boolean)

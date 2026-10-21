@@ -5,12 +5,15 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useRouteLoaderData,
 } from "react-router";
 import calSans from "cal-sans/fonts/calsans-var-full/CalSansVF.woff2?url";
 
 import type { Route } from "./+types/root";
 import { TooltipProvider } from "@/admin-components/ui/tooltip";
 import { useDocumentAttributes } from "@/lib/document";
+import { usePostHog } from "@/lib/posthog";
+import { posthogConfig } from "@/lib/posthog.server";
 import "./app.css";
 
 export const links: Route.LinksFunction = () => [
@@ -20,8 +23,14 @@ export const links: Route.LinksFunction = () => [
   { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
 ];
 
+export function loader({ request }: Route.LoaderArgs) {
+  return { posthog: posthogConfig(request.url) };
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
   const attributes = useDocumentAttributes();
+  // In the Layout, not App, so error pages are tracked too.
+  usePostHog(useRouteLoaderData<typeof loader>("root")?.posthog);
 
   return (
     <html lang="en" {...attributes} suppressHydrationWarning>
