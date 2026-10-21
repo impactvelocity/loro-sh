@@ -47,7 +47,7 @@ export function PageHeader({
             {meta}
           </div>
           {(docs || actions) && (
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               {docs && <DocsButton slug={docs.slug} tooltip={docs.tooltip} />}
               {actions}
             </div>
