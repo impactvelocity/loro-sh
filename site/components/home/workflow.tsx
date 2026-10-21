@@ -38,7 +38,7 @@ const rules = [
   },
   {
     title: "From Qloo, or Dropped",
-    body: "A written section can only recommend things Qloo returned, by entity id. Anything else is removed before the page shows it.",
+    body: "The agent can only recommend things Qloo returned, by entity id. Anything else is removed before the page shows it.",
     art: <GroundedArt />,
   },
   {
@@ -52,12 +52,12 @@ export function Workflow() {
   return (
     <Section
       id="workflow"
-      title="How Taste Runs Through Every Experience"
+      title="How the Agent Builds Each Page"
       align="center"
       intro={
         <p>
-          Each page is one run of a Cloudflare Workflow. Taste comes first, so every section after it works from real
-          places, artists and brands.
+          Each page is one agent run on a Cloudflare Workflow, saved step by step. It asks Qloo first, so every step
+          after that works from real places, artists and brands.
         </p>
       }
     >

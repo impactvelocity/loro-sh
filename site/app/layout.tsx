@@ -16,7 +16,7 @@ const cal = localFont({
 export const metadata: Metadata = {
   title: "Loro",
   description:
-    "A brand asks its customers what they love, and Loro builds each of them a page about what it sells: the road trip to a festival, the weekend at a rental, the week in a home for sale.",
+    "An agentic framework for brand experiences. A brand asks its customers what they love, and Loro’s agent builds each of them a page about what it sells: the road trip to a festival, the weekend at a rental, the week in a home for sale.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

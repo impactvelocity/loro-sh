@@ -84,7 +84,7 @@ export default function Home() {
           <Container className="relative">
             <div>
               <h1 className="max-w-[24ch] font-display text-[2.1rem] leading-[1.06] tracking-normal text-balance sm:text-5xl lg:text-[3.5rem]">
-                Loro is a Framework for Brand Experiences
+                Loro is an Agentic Framework for Brand Experiences
                 <span className="mt-2 block text-[0.6em] leading-[1.15] text-accent-hover">
                   Grounded in Qloo&rsquo;s Taste Intelligence
                 </span>

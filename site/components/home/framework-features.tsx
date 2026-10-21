@@ -28,12 +28,12 @@ export function FrameworkFeatures() {
   return (
     <Section
       id="framework"
-      title="The Loro Framework"
+      title="An Agentic Framework"
       align="center"
       intro={
         <p>
-          A brand brings what it sells, and Qloo brings what each customer loves. Loro builds the page from both, on
-          the brand&rsquo;s own Cloudflare account.
+          A brand brings what it sells, and Qloo brings what each customer loves. Loro is the agent in the middle of the
+          funnel: it builds each page from both, on the brand&rsquo;s own Cloudflare account.
         </p>
       }
     >
@@ -79,7 +79,7 @@ function Connections() {
           <div className="relative flex flex-col items-center rounded-[24px] bg-accent-deep px-9 py-7 text-center text-white shadow-[0_20px_40px_-16px_rgb(34_32_63/0.6)]">
             <Logo className="h-9 w-auto" />
             <p className="mt-3 max-w-[13rem] text-[13px] leading-snug text-white/65">
-              The framework, on the brand&rsquo;s own Cloudflare account
+              The agent, the admin and the API, on the brand&rsquo;s own Cloudflare account
             </p>
           </div>
         </div>
@@ -108,7 +108,7 @@ function Connections() {
             <h3 className="font-display text-xl">Experience Funnels</h3>
             <p className="mt-1 text-[14px] text-slate">Before the sale or after it: a ticket, a booking, a listing, a match</p>
             <ol className="mt-4 flex flex-wrap items-center justify-center gap-1.5 text-[12px] text-ink">
-              {["Landing Page", "Intake Form", "Personalise", "Branded Outcome"].map((step, i, all) => (
+              {["Landing Page", "Intake Form", "Loro’s Agent", "Branded Outcome"].map((step, i, all) => (
                 <li key={step} className="flex items-center gap-1.5">
                   <span
                     className={cx(

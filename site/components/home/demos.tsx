@@ -9,7 +9,7 @@ export function Demos() {
   return (
     <Section
       id="examples"
-      title="One Framework, Any Experience"
+      title="One Agent, Any Funnel"
       intro={
         <p>
           The brands are made up for the demo; the places, acts and listings are real, and each page below is a real

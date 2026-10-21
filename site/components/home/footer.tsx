@@ -37,7 +37,7 @@ export function Footer() {
         <div>
           <Logo className="h-7 w-auto text-ink" />
           <p className="mt-4 max-w-[30ch] text-[15px] leading-relaxed text-slate">
-            A framework for brand experiences, built on taste from Qloo.
+            An agentic framework for brand experiences, built on taste from Qloo.
           </p>
         </div>
         {columns.map((column) => (

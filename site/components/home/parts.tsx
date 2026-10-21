@@ -26,7 +26,7 @@ export function Parts() {
 const steps = [
   { above: "Landing Page", below: "The Brand’s Sign-Up", art: <LandingArt /> },
   { above: "Intake Form", below: "Who They Are, What They Love", art: <IntakeArt /> },
-  { above: "Personalise", below: "Matched by Qloo", art: <PersonaliseArt /> },
+  { above: "Loro’s Agent", below: "Asks Qloo, Then Writes the Page", art: <PersonaliseArt /> },
   { above: "Branded Outcome", below: "Their Plan, in the Brand’s Look", art: <OutcomeArt /> },
 ];
 
@@ -61,8 +61,9 @@ function Funnel() {
         ))}
       </ol>
       <p className="mx-auto mt-12 max-w-[44rem] text-center text-lg leading-relaxed text-pretty text-slate">
-        Someone signs up, answers the questions and gets a page built around what they love.
-        The brand keeps every answer in its profiles, and the customer gets a reason to book, buy or turn up.
+        Someone signs up and answers the questions. Loro&rsquo;s agent takes it from there: it asks Qloo what they
+        love, runs the brand&rsquo;s own steps and writes the page. The brand keeps every answer in its profiles, and
+        the customer gets a reason to book, buy or turn up.
       </p>
     </div>
   );

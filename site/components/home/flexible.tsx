@@ -33,12 +33,12 @@ const points = [
   },
   {
     title: "Custom Steps",
-    body: "Backend code that runs between taste and writing. Call any API, then ask Qloo for places along the way, the way the road trip plans its stops.",
+    body: "Tools the agent runs between taste and writing. Call any API, then ask Qloo for places along the way, the way the road trip plans its stops.",
     art: <StepArt />,
   },
   {
     title: "Skills",
-    body: "Write the brand’s rules once, in plain English, and every page follows them: how it sounds, what it can promise, what it always mentions.",
+    body: "Write the brand’s rules once, in plain English, and the agent follows them on every page: how it sounds, what it can promise, what it always mentions.",
     art: <SkillsArt />,
   },
   {
@@ -57,7 +57,7 @@ const points = [
     art: <AgentArt />,
   },
   {
-    title: "31 MCP Tools for Claude",
+    title: "31 MCP Tools for Any Agent",
     body: "One command connects Claude Code. It can build an experience, test the draft, read the page and fix the prompt without opening the admin, then start a page for anyone in Profiles.",
     art: <McpArt />,
   },
@@ -71,8 +71,8 @@ export function Flexible() {
       align="center"
       intro={
         <p>
-          Every demo here runs on the same core. Each new experience is a catalogue, a theme and a few skills, so a brand can
-          start with one and add the next when it&rsquo;s ready.
+          Every demo here runs on the same core and the same agent. Each new experience is a catalogue, a theme and a few
+          skills, so a brand can start with one and add the next when it&rsquo;s ready.
         </p>
       }
     >

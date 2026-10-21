@@ -110,7 +110,7 @@ export const demos: Demo[] = [
       },
       {
         kind: "personalise",
-        title: "Personalise",
+        title: "Loro’s Agent",
         detail: "Taste first, then the route and the bill",
         log: [
           { label: "Reading your taste", message: "Matched 7, found 20 picks" },
@@ -186,7 +186,7 @@ export const demos: Demo[] = [
       },
       {
         kind: "personalise",
-        title: "Personalise",
+        title: "Loro’s Agent",
         detail: "Every pick searched around the house",
         log: [
           { label: "Reading your taste", message: "Matched 4, found 32 picks" },
@@ -260,7 +260,7 @@ export const demos: Demo[] = [
       },
       {
         kind: "personalise",
-        title: "Personalise",
+        title: "Loro’s Agent",
         detail: "Every pick searched around the house",
         log: [
           { label: "Reading your taste", message: "Matched 5, found 53 picks" },
@@ -327,7 +327,7 @@ export const demos: Demo[] = [
       },
       {
         kind: "personalise",
-        title: "Personalise",
+        title: "Loro’s Agent",
         detail: "The listing first, so Qloo searches around the house",
         log: [
           { label: "Listing", message: "$929,000 · 8 photos" },
@@ -411,7 +411,7 @@ export const demos: Demo[] = [
       },
       {
         kind: "personalise",
-        title: "Personalise",
+        title: "Loro’s Agent",
         detail: "Every show on the calendar ranked in Qloo",
         log: [
           { label: "Reading your taste", message: "Matched 8, found 13 picks" },
@@ -499,7 +499,7 @@ export const demos: Demo[] = [
       },
       {
         kind: "personalise",
-        title: "Personalise",
+        title: "Loro’s Agent",
         detail: "Places a walk apart, weighted towards Ben",
         log: [
           { label: "Reading your taste", message: "Matched 4 favourites" },
