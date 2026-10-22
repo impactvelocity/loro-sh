@@ -393,7 +393,11 @@ function Chat({ data }: { data: Route.ComponentProps["loaderData"] }) {
 
       <div className="mx-auto w-full max-w-3xl shrink-0 px-4 pb-6 md:px-6">
         {readOnly ? (
-          <ViewOnlyNote>The agent reads and changes this workspace, so chatting with it needs the password.</ViewOnlyNote>
+          <ViewOnlyNote>
+            Each message makes real Claude and Qloo calls and saves the thread for every visitor to see, so chatting
+            needs the password. Ask us for it to try the agent yourself. The threads in the menu at the top are real
+            chats.
+          </ViewOnlyNote>
         ) : (
           <Composer
             inputRef={input}
