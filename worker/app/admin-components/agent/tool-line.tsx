@@ -38,10 +38,15 @@ const count = (value: unknown, one: string, many: string) => {
   return `${n} ${n === 1 ? one : many}`;
 };
 
-/** "bars", "films", "TV shows": what a Qloo call is finding. */
+/**
+ * "bars", "films", "TV shows": what a Qloo call is finding. Input streams
+ * in, so kinds can be half-written ("cof") until the call starts.
+ */
 function finding(input: Loose) {
-  const kinds = (input.kinds as PlaceCategory[] | undefined) ?? [];
-  if (input.type === "place" && kinds.length) return kinds.map((kind) => placeCategories[kind].label.toLowerCase()).join(", ");
+  const kinds = (Array.isArray(input.kinds) ? input.kinds : []).flatMap(
+    (kind) => placeCategories[kind as PlaceCategory]?.label.toLowerCase() ?? [],
+  );
+  if (input.type === "place" && kinds.length) return kinds.join(", ");
   const label = signalTypes[input.type as keyof typeof signalTypes] ?? "thing";
   return label.startsWith("TV") ? `${label}s` : `${label.toLowerCase()}s`;
 }
@@ -73,8 +78,8 @@ function describe(name: string, input: Loose, output: Loose | undefined) {
     case "listSkills":
       return { icon: BookOpenIcon, running: "Reading skills", done: `Read ${count(output, "skill", "skills")}` };
     case "searchQloo": {
-      const names = (input.names as { name: string }[] | undefined) ?? [];
-      const asked = names.length === 1 ? names[0].name : `${names.length} names`;
+      const names = (input.names as { name?: string }[] | undefined) ?? [];
+      const asked = names.length === 1 && names[0]?.name ? names[0].name : `${names.length} ${names.length === 1 ? "name" : "names"}`;
       const found = Number(output?.found ?? 0);
       return {
         icon: SearchIcon,
