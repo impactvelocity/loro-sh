@@ -24,12 +24,14 @@ const image = {
   alt: "Loro is an Agentic Framework for Brand Experiences, beside three brands’ pages made by its agent.",
 };
 
+const title = "Loro – Agentic Framework for Brand Experiences";
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://loro.sh"),
-  title: "Loro",
+  title,
   description,
-  openGraph: { type: "website", url: "/", siteName: "Loro", title: "Loro", description, images: [image] },
-  twitter: { card: "summary_large_image", title: "Loro", description, images: [image] },
+  openGraph: { type: "website", url: "/", siteName: "Loro", title, description, images: [image] },
+  twitter: { card: "summary_large_image", title, description, images: [image] },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
